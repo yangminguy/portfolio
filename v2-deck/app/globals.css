@@ -17,12 +17,16 @@
   --border-strong:   rgba(23, 23, 23, 0.18);
   --hover:           rgba(23, 23, 23, 0.035);
 
+  /* Accent */
+  --accent:          #1B6CB0;
+  --accent-muted:    rgba(27, 108, 176, 0.10);
+
   /* Motion */
-  --ease-editorial:  cubic-bezier(0.2, 0.6, 0.2, 1);
+  --ease-editorial:  cubic-bezier(0.15, 0.8, 0.25, 1);
   --duration-fast:   180ms;
   --duration-base:   200ms;
-  --reveal-duration: 560ms;
-  --reveal-step:     80ms;
+  --reveal-duration: 480ms;
+  --reveal-step:     65ms;
 
   --font-feature: "ss01", "cv11", "calt";
 }
@@ -99,10 +103,11 @@ button     { background: none; border: 0; padding: 0; cursor: pointer; color: in
   left: 0;
   top: -2.15rem;
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 0.78rem;
   line-height: 1;
-  letter-spacing: -0.015em;
+  letter-spacing: 0.08em;
   white-space: nowrap;
+  text-transform: uppercase;
 }
 
 .scene-frame {
@@ -112,6 +117,7 @@ button     { background: none; border: 0; padding: 0; cursor: pointer; color: in
   height: 100%;
   overflow: hidden;
   background: #fff;
+  box-shadow: 0 2px 24px rgba(23, 23, 23, 0.07), 0 1px 4px rgba(23, 23, 23, 0.04);
 }
 
 .scene-frame > * {
@@ -179,7 +185,7 @@ button     { background: none; border: 0; padding: 0; cursor: pointer; color: in
  * --------------------------------------------------------------- */
 
 .crossfade-enter {
-  animation: crossfade 240ms var(--ease-editorial) both;
+  animation: crossfade 200ms var(--ease-editorial) both;
 }
 @keyframes crossfade {
   from { opacity: 0; transform: translateY(2px); }

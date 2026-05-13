@@ -34,8 +34,8 @@ export function SceneIndicator() {
               className={[
                 "block transition-all duration-300 ease-editorial",
                 isActive
-                  ? "h-3.5 w-7 border border-foreground/35 bg-transparent"
-                  : "h-5 w-px bg-foreground/30 hover:bg-foreground/55",
+                  ? "h-3.5 w-8 border border-accent/70 bg-accent-muted"
+                  : "h-5 w-px bg-foreground/30 hover:bg-foreground/45",
               ].join(" ")}
             />
           </button>

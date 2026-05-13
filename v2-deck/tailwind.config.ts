@@ -28,6 +28,8 @@ const config: Config = {
         border:          "var(--border)",
         "border-strong": "var(--border-strong)",
         hover:           "var(--hover)",
+        accent:          "var(--accent)",
+        "accent-muted":  "var(--accent-muted)",
       },
       fontFamily: {
         sans: [

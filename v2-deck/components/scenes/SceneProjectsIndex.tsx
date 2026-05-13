@@ -72,7 +72,7 @@ export function SceneProjectsIndex() {
                   key={p.slug}
                   data-reveal-line
                   style={{ ["--i" as never]: 1 + i }}
-                  className="border-t border-border last:border-b"
+                  className="border-t border-border last:border-b hover:border-accent/30"
                   onMouseEnter={() => setActive(i)}
                   onFocus={() => setActive(i)}
                 >

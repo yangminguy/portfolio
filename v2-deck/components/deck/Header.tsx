@@ -11,7 +11,7 @@ import { useDeck } from "./DeckContext";
 export function Header() {
   const { goTo } = useDeck();
   const linkCls =
-    "pointer-events-auto transition-colors duration-180 ease-editorial hover:text-foreground";
+    "pointer-events-auto transition-all duration-180 ease-editorial hover:text-foreground hover:underline hover:underline-offset-2 hover:decoration-accent/50";
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-40">

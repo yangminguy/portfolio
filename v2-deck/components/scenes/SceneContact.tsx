@@ -23,7 +23,7 @@ export function SceneContact() {
             data-reveal-line
             style={{ ["--i" as never]: 1 }}
             href="mailto:yangminguy@gmail.com"
-            className="mt-9 w-fit text-lg sm:text-xl text-foreground underline-offset-[6px] decoration-foreground/30 hover:underline transition-colors duration-180 ease-editorial"
+            className="mt-9 w-fit text-lg sm:text-xl text-foreground underline-offset-[6px] decoration-foreground/30 hover:text-accent hover:decoration-accent/50 hover:underline transition-colors duration-180 ease-editorial"
           >
             yangminguy@gmail.com
           </a>
