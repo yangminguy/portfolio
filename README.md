@@ -1,6 +1,9 @@
 # Yang Wonmin Portfolio Website — v2 Content MVP
 
-This package contains the current working version of the portfolio website.
+This package contains the production version of the portfolio website.
+
+**Live**: https://portfolio-delta-tawny-qmwpawi6wv.vercel.app  
+**GitHub**: https://github.com/yangminguy/portfolio.git
 
 ## Final Direction
 
@@ -9,6 +12,7 @@ v2-deck only
 horizontal slide deck
 rauno-style neighboring slides
 content MVP with two active projects
+deployed to vercel
 ```
 
 ## Start Here

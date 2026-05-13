@@ -160,14 +160,17 @@ Back links from detail pages should return to the deck, usually `/#scene-03` or 
 
 ## 8. Deployment
 
-Recommended deployment:
+**✅ Deployed to Vercel**
 
-```text
-Vercel
-Root Directory: v2-deck
-Build Command: npm run build
-Output: Next.js default
-```
+Configuration:
+- **Root Directory**: v2-deck
+- **Framework Preset**: Next.js (critical for proper output directory routing)
+- **Build Command**: npm run build
+- **Output Directory**: .next (with Override enabled)
+- **GitHub Repository**: https://github.com/yangminguy/portfolio.git
+- **Live Domain**: https://portfolio-delta-tawny-qmwpawi6wv.vercel.app
+
+**Important**: Framework Preset must be set to "Next.js" (not "Other") to properly recognize the `.next` output directory. This setting overrides local vercel.json configuration.
 
 ## 9. Risks
 
