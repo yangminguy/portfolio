@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yang Wonmin — Deck</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <!-- Tailwind Play CDN + tokens -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        fontSize: {
+          '2xs': ['11px', { lineHeight: '1.4'  }],
+          xs:    ['12px', { lineHeight: '1.45' }],
+          sm:    ['13px', { lineHeight: '1.5'  }],
+          base:  ['15px', { lineHeight: '1.7'  }],
+          md:    ['16px', { lineHeight: '1.55' }],
+          lg:    ['18px', { lineHeight: '1.55' }],
+          xl:    ['20px', { lineHeight: '1.45' }],
+          '2xl': ['24px', { lineHeight: '1.3'  }],
+          '3xl': ['28px', { lineHeight: '1.25' }],
+          '4xl': ['34px', { lineHeight: '1.2'  }],
+          '5xl': ['44px', { lineHeight: '1.1'  }],
+        },
+        extend: {
+          colors: {
+            background:      'var(--background)',
+            foreground:      'var(--foreground)',
+            muted:           'var(--muted)',
+            subtle:          'var(--subtle)',
+            border:          'var(--border)',
+            'border-strong': 'var(--border-strong)',
+            hover:           'var(--hover)',
+          },
+          fontFamily: {
+            sans: ['Geist', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'system-ui', 'sans-serif'],
+          },
+          maxWidth: {
+            prose:  '680px',
+            detail: '760px',
+            scene:  '880px',
+            wide:   '960px',
+          },
+          transitionDuration: {
+            180: '180ms',
+            500: '500ms',
+            600: '600ms',
+          },
+          transitionTimingFunction: {
+            editorial: 'cubic-bezier(0.2, 0.6, 0.2, 1)',
+          },
+          letterSpacing: {
+            editorial: '-0.005em',
+            section:   '0.14em',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    :root {
+      --background:    #f7f4ef;
+      --foreground:    #171717;
+      --muted:         #6f6a63;
+      --subtle:        #9a948c;
+      --border:        rgba(23, 23, 23, 0.10);
+      --border-strong: rgba(23, 23, 23, 0.18);
+      --hover:         rgba(23, 23, 23, 0.035);
+      --ease-editorial: cubic-bezier(0.2, 0.6, 0.2, 1);
+      --reveal-duration: 560ms;
+      --reveal-step:     80ms;
+    }
+    html, body { background: var(--background); color: var(--foreground); }
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      height: 100%;
+      overflow: hidden;
+    }
+    body {
+      margin: 0;
+      height: 100%;
+      font-family: "Geist", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      font-feature-settings: "ss01", "cv11", "calt";
+      text-rendering: optimizeLegibility;
+    }
+    ::selection { background: rgba(23,23,23,0.92); color: #f7f4ef; }
+    a       { color: inherit; text-decoration: none; }
+    hr      { border: 0; border-top: 1px solid var(--border); }
+    button  { background: none; border: 0; padding: 0; cursor: pointer; color: inherit; font: inherit; }
+
+    /* Deck scroll container */
+    .deck-root {
+      height: 100vh;
+      height: 100dvh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .deck-root::-webkit-scrollbar { display: none; }
+
+    .scene {
+      min-height: 100vh;
+      min-height: 100dvh;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      position: relative;
+      display: flex;
+      width: 100%;
+    }
+
+    /* Reveal lines */
+    [data-reveal-line] {
+      opacity: 0;
+      transform: translateY(6px);
+      transition:
+        opacity   var(--reveal-duration) var(--ease-editorial),
+        transform var(--reveal-duration) var(--ease-editorial);
+      transition-delay: calc(var(--i, 0) * var(--reveal-step));
+      will-change: opacity, transform;
+    }
+    .scene[data-revealed="true"] [data-reveal-line] {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .deck-root { scroll-behavior: auto; }
+      [data-reveal-line] { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* Crossfade for description swaps */
+    .crossfade-enter {
+      animation: crossfade 240ms var(--ease-editorial) both;
+    }
+    @keyframes crossfade {
+      from { opacity: 0; transform: translateY(2px); }
+      to   { opacity: 1; transform: translateY(0);  }
+    }
+
+    /* Detail page enables normal scrolling on body */
+    body.detail-route { overflow-y: auto; }
+    body.detail-route { height: auto; min-height: 100vh; }
+  </style>
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef, useCallback, useContext, createContext, Fragment } = React;
+
+    /* =========================================================
+     * Data — mirrors v2-deck/data/projects.ts
+     * ========================================================= */
+
+    const SECTION_LABELS = {
+      context: 'Context', problem: 'Problem', system: 'System',
+      execution: 'Execution', impact: 'Impact', artifacts: 'Artifacts', reflection: 'Reflection',
+    };
+    const SECTION_ORDER = ['context','problem','system','execution','impact','artifacts','reflection'];
+
+    const projects = [
+      {
+        slug: 'campit-influencer-marketing-system',
+        title: 'Campit Influencer Marketing System',
+        year: '2024',
+        summary: 'Creator-driven operating system for campsite growth.',
+        role: 'PM · Marketing Operations · No-code Automation',
+        domain: ['Camping Platform', 'Influencer Marketing'],
+        tools: ['Notion', 'Make', 'Slack', 'Google Sheets'],
+        active: true,
+        featured: {
+          problem: '캠페인의 흐름과 결과가 도구마다 흩어져 있어 반복되지 못했다.',
+          system:  '인플루언서 풀, 트래커, 검수, 정산을 하나의 Notion 워크스페이스로 연결. 반복 작업은 Make로 자동화.',
+          result:  '운영 부담이 줄고, 캠페인별 비교가 가능해졌다. 다음 캠페인부터 시스템이 재사용되었다.',
+        },
+        sections: {
+          context: '캠핑장 운영자들은 인플루언서와의 협업을 시도했지만, 캠페인의 흐름과 결과가 도구마다 흩어져 있어 반복 가능한 운영으로 이어지지 못했다. 운영팀은 매 시즌 새 캠페인을 처음부터 다시 세팅해야 했다.',
+          problem: '섭외, 브리프, 콘텐츠 검수, 정산, 성과 측정이 각각 다른 채널에서 진행되었다. 캠페인이 끝나면 어디서 무엇이 작동했는지 다시 추적하기 어려웠고, 다음 캠페인은 학습 없이 시작되었다.',
+          system: '인플루언서 풀, 캠페인 트래커, 콘텐츠 검수, 성과 리포트를 하나의 Notion 워크스페이스로 연결했다. 반복 작업은 Make와 Slack 알림으로 자동화해, PM 한 명이 동시에 여러 캠페인을 관리할 수 있는 구조를 만들었다.',
+          execution: '첫 분기 동안 6개 캠프장과 12명의 크리에이터가 같은 시스템 안에서 협업했다. 브리프 템플릿, 컨택 시퀀스, 정산 체크리스트를 표준화해 다음 캠페인부터 운영 부담을 줄였다.',
+          impact: '캠페인 준비 시간이 평균적으로 단축되었고, 콘텐츠 게시 누락이 사라졌다. 캠프장별 성과 비교가 가능해지면서, 무엇이 예약 전환에 영향을 주는지 가설을 검증할 수 있는 기반이 생겼다.',
+          artifacts: '캠페인 트래커 · 크리에이터 풀 DB · 브리프 템플릿 · 정산 체크리스트 · 캠페인 후 리포트 포맷.',
+          reflection: '마케팅의 결과보다 운영 구조가 먼저 만들어져야 결과가 반복된다. 이 프로젝트는 그 사실을 가장 짧은 사이클로 확인해 준 작업이었다.',
+        },
+      },
+      { slug: 'plays-lounge-popup-strategy', title: 'Plays Lounge Pop-up Strategy', year: '2025',
+        summary: 'Offline brand experience designed around influencer IP, family space, and fandom conversion.',
+        role: 'Strategy · Brand Experience', active: false },
+      { slug: 'gugok-dakgalbi-brand-launch', title: 'Gugok Dakgalbi Brand Launch', year: '2025',
+        summary: 'Retro F&B brand system inspired by Gangchon memories and local nostalgia.',
+        role: 'Brand · Identity', active: false },
+      { slug: 'portfolio-evidence-mapper', title: 'Portfolio Evidence Mapper', year: '2026',
+        summary: 'A Notion-based evidence pipeline for turning scattered work into portfolio-ready records.',
+        role: 'Personal · Knowledge Ops', active: false },
+    ];
+
+    const getProjectBySlug = (slug) => projects.find((p) => p.slug === slug);
+
+    const PROCESS_STEPS = [
+      { name: 'Observe',   body: '관찰. 흩어진 일이 어디서 반복되는지 본다.' },
+      { name: 'Structure', body: '구조화. 반복 가능한 패턴으로 정리한다.' },
+      { name: 'Automate',  body: '자동화. 사람의 손에서 떼어낸다.' },
+      { name: 'Measure',   body: '측정. 무엇이 작동했는지 본다.' },
+      { name: 'Refine',    body: '개선. 다시 처음으로 돌아간다.' },
+    ];
+
+    const PRINCIPLES = [
+      '흩어진 일을 구조화합니다.',
+      '반복되는 일을 시스템화합니다.',
+      '감각적인 일을 측정 가능하게 만듭니다.',
+      '아이디어를 실행 가능한 단위로 바꿉니다.',
+      '프로젝트가 읽히도록 정리합니다.',
+    ];
+
+    const POSITIONING_KEYWORDS = ['Marketing Operations', 'AI Automation', 'Project Structuring'];
+
+    const SCENES = [
+      { id: 'scene-01', label: 'Identity' },
+      { id: 'scene-02', label: 'Positioning' },
+      { id: 'scene-03', label: 'Projects' },
+      { id: 'scene-04', label: 'Featured' },
+      { id: 'scene-05', label: 'How I Work' },
+      { id: 'scene-06', label: 'Principles' },
+      { id: 'scene-07', label: 'Contact' },
+    ];
+    const TOTAL = SCENES.length;
+
+    /* =========================================================
+     * Hash router — '#/' = deck, '#/projects/:slug' = detail
+     * ========================================================= */
+
+    function parseRoute(hash) {
+      const path = (hash || '').replace(/^#/, '');
+      const m = path.match(/^\/projects\/([^/]+)$/);
+      if (m) return { name: 'detail', slug: m[1] };
+      return { name: 'deck' };
+    }
+
+    function useRoute() {
+      const [hash, setHash] = useState(() => window.location.hash);
+      useEffect(() => {
+        const onChange = () => setHash(window.location.hash);
+        window.addEventListener('hashchange', onChange);
+        return () => window.removeEventListener('hashchange', onChange);
+      }, []);
+      return parseRoute(hash);
+    }
+
+    /* =========================================================
+     * Deck context — active scene, keyboard nav, return-scene
+     * ========================================================= */
+
+    const DeckContext = createContext(null);
+    const useDeck = () => useContext(DeckContext);
+
+    function scrollToSceneIndex(i, behavior = 'smooth') {
+      const id = `scene-${String(i + 1).padStart(2, '0')}`;
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior, block: 'start' });
+    }
+
+    function DeckProvider({ children }) {
+      const [active, setActive] = useState(0);
+      const [hasScrolled, setHasScrolled] = useState(false);
+      const scrolledOnceRef = useRef(false);
+
+      const goTo = useCallback((i) => {
+        const c = Math.max(0, Math.min(TOTAL - 1, i));
+        scrollToSceneIndex(c);
+      }, []);
+
+      useEffect(() => {
+        if (active > 0 && !scrolledOnceRef.current) {
+          scrolledOnceRef.current = true;
+          setHasScrolled(true);
+        }
+      }, [active]);
+
+      /* Keyboard navigation */
+      useEffect(() => {
+        const onKey = (e) => {
+          const ae = document.activeElement;
+          const tag = (ae && ae.tagName || '').toLowerCase();
+          if (['input','textarea','select'].includes(tag)) return;
+          if (ae && ae.isContentEditable) return;
+
+          let next = null;
+          switch (e.key) {
+            case 'ArrowDown':
+            case 'PageDown':  next = active + 1; break;
+            case 'ArrowUp':
+            case 'PageUp':    next = active - 1; break;
+            case ' ':         next = e.shiftKey ? active - 1 : active + 1; break;
+            case 'Home':      next = 0; break;
+            case 'End':       next = TOTAL - 1; break;
+            default: return;
+          }
+          const c = Math.max(0, Math.min(TOTAL - 1, next));
+          if (c === active) return;
+          e.preventDefault();
+          scrollToSceneIndex(c);
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+      }, [active]);
+
+      /* On mount, if sessionStorage signals a return scene, jump there */
+      useEffect(() => {
+        const ret = sessionStorage.getItem('returnScene');
+        if (!ret) return;
+        sessionStorage.removeItem('returnScene');
+        const i = parseInt(ret, 10);
+        if (Number.isFinite(i) && i >= 0 && i < TOTAL) {
+          requestAnimationFrame(() => {
+            scrollToSceneIndex(i, 'auto');
+            setActive(i);
+            if (i > 0) { scrolledOnceRef.current = true; setHasScrolled(true); }
+          });
+        }
+      }, []);
+
+      return (
+        <DeckContext.Provider value={{ active, total: TOTAL, setActive, goTo, hasScrolled }}>
+          {children}
+        </DeckContext.Provider>
+      );
+    }
+
+    /* =========================================================
+     * Scene — observed, reveals on first 50%-cross
+     * ========================================================= */
+
+    function Scene({ index, ariaLabel, children }) {
+      const ref = useRef(null);
+      const [revealed, setRevealed] = useState(false);
+      const { setActive } = useDeck();
+      const id = `scene-${String(index + 1).padStart(2, '0')}`;
+
+      useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const obs = new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+              setActive(index);
+              setRevealed(true);
+            }
+          }
+        }, { threshold: [0.5] });
+        obs.observe(el);
+        return () => obs.disconnect();
+      }, [index]);
+
+      return (
+        <section
+          ref={ref}
+          id={id}
+          aria-label={ariaLabel}
+          data-revealed={revealed ? 'true' : 'false'}
+          className="scene"
+        >
+          {children}
+        </section>
+      );
+    }
+
+    /* =========================================================
+     * Deck chrome
+     * ========================================================= */
+
+    function Header() {
+      const onNav = (i) => (e) => { e.preventDefault(); scrollToSceneIndex(i); };
+      const linkCls = "transition-colors duration-180 ease-editorial hover:text-foreground";
+      return (
+        <header className="pointer-events-none fixed inset-x-0 top-0 z-40">
+          <div className="flex items-baseline justify-between px-6 sm:px-10 pt-6 sm:pt-8 text-sm text-muted">
+            <a href="#scene-01" onClick={onNav(0)} className={`pointer-events-auto ${linkCls}`}>Yang Wonmin</a>
+            <nav className="pointer-events-auto flex gap-5 sm:gap-7">
+              <a href="#scene-03" onClick={onNav(2)} className={linkCls}>Projects</a>
+              <a href="#scene-06" onClick={onNav(5)} className={linkCls}>Notes</a>
+              <a href="#scene-02" onClick={onNav(1)} className={linkCls}>About</a>
+            </nav>
+          </div>
+        </header>
+      );
+    }
+
+    function SceneIndicator() {
+      const { active, goTo } = useDeck();
+      return (
+        <nav aria-label="Scene navigation"
+             className="pointer-events-none fixed right-6 sm:right-10 top-1/2 -translate-y-1/2 z-40 hidden sm:flex flex-col gap-2.5">
+          {SCENES.map((scene, i) => {
+            const isActive = active === i;
+            return (
+              <button key={scene.id} type="button" onClick={() => goTo(i)}
+                aria-label={`Scene ${i+1}: ${scene.label}`}
+                aria-current={isActive ? 'true' : undefined}
+                className={`pointer-events-auto inline-flex items-center gap-2 text-2xs tabular-nums transition-colors duration-200 ease-editorial ${
+                  isActive ? 'text-foreground/85' : 'text-subtle/70 hover:text-muted'
+                }`}>
+                <span aria-hidden className={`block h-px transition-all duration-300 ease-editorial ${
+                  isActive ? 'w-3 bg-foreground/60' : 'w-0 bg-transparent'
+                }`} />
+                <span>{String(i+1).padStart(2,'0')}</span>
+              </button>
+            );
+          })}
+        </nav>
+      );
+    }
+
+    function SceneCounter() {
+      const { active, total } = useDeck();
+      return (
+        <div className="pointer-events-none fixed left-6 sm:left-10 bottom-6 sm:bottom-8 z-40 text-2xs tabular-nums text-subtle">
+          {String(active+1).padStart(2,'0')} <span className="text-subtle/60">/</span> {String(total).padStart(2,'0')}
+        </div>
+      );
+    }
+
+    function NextHint() {
+      const { active, hasScrolled } = useDeck();
+      const visible = active === 0 && !hasScrolled;
+      return (
+        <div aria-hidden
+             className={`fixed right-6 sm:right-10 bottom-6 sm:bottom-8 z-40 text-2xs text-subtle transition-opacity duration-500 ease-editorial ${
+               visible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+             }`}>
+          <span className="inline-flex items-baseline gap-1.5">
+            <span>Next</span><span aria-hidden>↓</span>
+          </span>
+        </div>
+      );
+    }
+
+    /* =========================================================
+     * Scenes 01–07
+     * ========================================================= */
+
+    function SceneIdentity() {
+      return (
+        <Scene index={0} ariaLabel="Identity">
+          <div className="flex w-full flex-col">
+            <div className="flex-1" aria-hidden />
+            <div className="px-6 sm:px-12 pb-24 sm:pb-32 max-w-[720px]">
+              <div className="text-xl sm:text-2xl leading-[1.4] tracking-editorial text-foreground">
+                <p data-reveal-line style={{ '--i': 0 }}>양원민은 마케팅, 운영, AI 자동화를 연결해</p>
+                <p data-reveal-line style={{ '--i': 1 }}>흩어진 일을 반복 가능한 시스템으로</p>
+                <p data-reveal-line style={{ '--i': 2 }}>만드는 프로젝트 매니저입니다.</p>
+              </div>
+              <div data-reveal-line style={{ '--i': 4 }}
+                   className="mt-10 flex items-center gap-3 text-2xs text-subtle">
+                <span aria-hidden className="block h-px w-8 bg-foreground/25" />
+                <span className="tracking-[0.06em]">Project Operator · Seoul</span>
+              </div>
+            </div>
+          </div>
+        </Scene>
+      );
+    }
+
+    function ScenePositioning() {
+      return (
+        <Scene index={1} ariaLabel="Positioning">
+          <div className="flex w-full flex-col justify-center">
+            <div className="px-6 sm:px-12 max-w-[760px]">
+              <h2 className="text-4xl sm:text-5xl font-medium tracking-editorial text-foreground">
+                <span data-reveal-line style={{ '--i': 0 }} className="block">I build systems</span>
+                <span data-reveal-line style={{ '--i': 1 }} className="block">for scattered work.</span>
+              </h2>
+              <p data-reveal-line style={{ '--i': 3 }}
+                 className="mt-7 text-base text-muted max-w-[480px] leading-[1.7]">
+                흩어진 운영, 마케팅, 자동화 흐름을 반복 가능한 구조로 바꿉니다.
+              </p>
+              <ul data-reveal-line style={{ '--i': 5 }}
+                  className="mt-14 sm:mt-16 flex flex-wrap gap-x-10 sm:gap-x-14 gap-y-5 text-sm text-foreground/80">
+                {POSITIONING_KEYWORDS.map((k) => (
+                  <li key={k} className="flex flex-col gap-1.5">
+                    <span>{k}</span>
+                    <span aria-hidden className="block h-px w-10 bg-foreground/20" />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </Scene>
+      );
+    }
+
+    function SceneProjectsIndex() {
+      const [active, setActive] = useState(0);
+      const current = projects[active];
+      return (
+        <Scene index={2} ariaLabel="Projects">
+          <div className="flex w-full flex-col justify-center">
+            <div className="px-6 sm:px-12 max-w-[820px] w-full">
+              <p data-reveal-line style={{ '--i': 0 }}
+                 className="text-xs uppercase tracking-section text-subtle font-medium">Projects</p>
+
+              <ul className="mt-10 sm:mt-14 flex flex-col">
+                {projects.map((p, i) => {
+                  const isActiveHover = active === i;
+                  const RowInner = (
+                    <div className="grid grid-cols-[2.25rem_1fr_auto] items-baseline gap-4 sm:gap-6 py-3 sm:py-4">
+                      <span className="text-sm text-subtle tabular-nums">{String(i+1).padStart(2,'0')}</span>
+                      <span className={`text-lg sm:text-xl font-medium tracking-editorial transition-colors duration-180 ease-editorial ${
+                        isActiveHover ? 'text-foreground' : 'text-foreground/75'
+                      }`}>
+                        <span>{p.title}</span>
+                        {p.active && (
+                          <span aria-hidden className={`ml-2 inline-block text-muted transition-all duration-200 ease-editorial ${
+                            isActiveHover ? 'opacity-70 translate-x-0' : 'opacity-0 -translate-x-1'
+                          }`}>→</span>
+                        )}
+                      </span>
+                      <span className="text-sm text-subtle tabular-nums">{p.year}</span>
+                    </div>
+                  );
+                  return (
+                    <li key={p.slug}
+                        data-reveal-line style={{ '--i': 1 + i }}
+                        className="border-t border-border last:border-b"
+                        onMouseEnter={() => setActive(i)}
+                        onFocus={() => setActive(i)}>
+                      {p.active
+                        ? <a href={`#/projects/${p.slug}`} className="block">{RowInner}</a>
+                        : <div tabIndex={0} className="block cursor-default outline-none">{RowInner}</div>}
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <div data-reveal-line style={{ '--i': 1 + projects.length }}
+                   className="mt-10 sm:mt-14 min-h-[78px]">
+                <div key={current.slug} className="crossfade-enter">
+                  <p className="text-sm text-muted leading-[1.7] max-w-[600px]">{current.summary}</p>
+                  {current.role && <p className="mt-1 text-2xs text-subtle">{current.role}</p>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Scene>
+      );
+    }
+
+    function SceneFeaturedProject() {
+      const project = getProjectBySlug('campit-influencer-marketing-system');
+      if (!project || !project.featured) return null;
+      const f = project.featured;
+      const blocks = [
+        ['Problem', f.problem],
+        ['System',  f.system],
+        ['Result',  f.result],
+      ];
+      return (
+        <Scene index={3} ariaLabel="Featured project">
+          <div className="flex w-full flex-col justify-center">
+            <div className="px-6 sm:px-12 max-w-wide w-full">
+              <p data-reveal-line style={{ '--i': 0 }}
+                 className="text-xs uppercase tracking-section text-subtle font-medium">Featured</p>
+
+              <div className="mt-10 sm:mt-14 grid grid-cols-1 md:grid-cols-[1fr_1.4fr] gap-10 md:gap-16">
+                <div className="flex flex-col">
+                  <h2 data-reveal-line style={{ '--i': 1 }}
+                      className="text-2xl sm:text-3xl font-medium tracking-editorial leading-[1.2] text-foreground">
+                    Campit Influencer<br/>Marketing System
+                  </h2>
+                  <span aria-hidden data-reveal-line style={{ '--i': 2 }}
+                        className="mt-5 block h-px w-8 bg-foreground/25" />
+                  <dl data-reveal-line style={{ '--i': 3 }}
+                      className="mt-5 text-sm text-muted leading-[1.85]">
+                    <div>2024</div>
+                    <div>PM · Marketing Operations</div>
+                    <div>No-code Automation</div>
+                  </dl>
+                </div>
+
+                <div className="flex flex-col gap-7 sm:gap-8">
+                  {blocks.map(([label, body], i) => (
+                    <div key={label} data-reveal-line style={{ '--i': 4 + i }}>
+                      <h3 className="text-xs uppercase tracking-section text-subtle font-medium">{label}</h3>
+                      <p className="mt-2.5 text-base text-foreground/90 leading-[1.7] max-w-[520px]">{body}</p>
+                    </div>
+                  ))}
+                  <a data-reveal-line style={{ '--i': 7 }}
+                     href={`#/projects/${project.slug}`}
+                     className="group mt-2 inline-flex items-baseline gap-1.5 text-sm text-muted transition-colors duration-180 ease-editorial hover:text-foreground">
+                    <span className="border-b border-transparent group-hover:border-current">View detail</span>
+                    <span aria-hidden className="inline-block transition-transform duration-200 ease-editorial group-hover:translate-x-0.5">→</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Scene>
+      );
+    }
+
+    function SceneProcess() {
+      const [active, setActive] = useState(0);
+      return (
+        <Scene index={4} ariaLabel="How I work">
+          <div className="flex w-full flex-col justify-center">
+            <div className="px-6 sm:px-12 max-w-scene w-full">
+              <p data-reveal-line style={{ '--i': 0 }}
+                 className="text-xs uppercase tracking-section text-subtle font-medium">How I Work</p>
+
+              <div data-reveal-line style={{ '--i': 1 }}
+                   className="mt-12 sm:mt-16 flex flex-wrap items-baseline gap-x-4 sm:gap-x-6 gap-y-3 text-lg sm:text-xl tracking-editorial">
+                {PROCESS_STEPS.flatMap((step, i) => {
+                  const els = [];
+                  if (i > 0) els.push(
+                    <span key={`arrow-${i}`} aria-hidden className="text-subtle/80 select-none">→</span>
+                  );
+                  els.push(
+                    <button key={step.name} type="button"
+                            onMouseEnter={() => setActive(i)}
+                            onFocus={() => setActive(i)}
+                            aria-pressed={active === i}
+                            className={`transition-colors duration-180 ease-editorial ${
+                              active === i ? 'text-foreground' : 'text-muted hover:text-foreground'
+                            }`}>
+                      {step.name}
+                    </button>
+                  );
+                  return els;
+                })}
+              </div>
+
+              <div data-reveal-line style={{ '--i': 2 }}
+                   className="mt-9 sm:mt-10 pt-5 border-t border-border min-h-[64px]">
+                <p key={active} className="crossfade-enter text-base text-muted leading-[1.7] max-w-[600px]">
+                  {PROCESS_STEPS[active].body}
+                </p>
+              </div>
+            </div>
+          </div>
+        </Scene>
+      );
+    }
+
+    function ScenePrinciples() {
+      return (
+        <Scene index={5} ariaLabel="Principles">
+          <div className="flex w-full flex-col justify-center">
+            <div className="px-6 sm:px-12 max-w-prose">
+              <p data-reveal-line style={{ '--i': 0 }}
+                 className="text-xs uppercase tracking-section text-subtle font-medium">Principles</p>
+              <ul className="mt-10 sm:mt-14 flex flex-col gap-3 sm:gap-4 text-lg sm:text-xl text-foreground/90 leading-[1.45] tracking-editorial">
+                {PRINCIPLES.map((line, i) => (
+                  <li key={line} data-reveal-line style={{ '--i': 1 + i }}>{line}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </Scene>
+      );
+    }
+
+    function SceneContact() {
+      return (
+        <Scene index={6} ariaLabel="Contact">
+          <div className="flex w-full flex-col">
+            <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 max-w-prose">
+              <h2 data-reveal-line style={{ '--i': 0 }}
+                  className="text-4xl sm:text-5xl font-medium tracking-editorial text-foreground">
+                Let's talk.
+              </h2>
+              <a data-reveal-line style={{ '--i': 1 }}
+                 href="mailto:hello@yangwonmin.com"
+                 className="mt-9 w-fit text-lg sm:text-xl text-foreground underline-offset-[6px] decoration-foreground/30 hover:underline transition-colors duration-180 ease-editorial">
+                hello@yangwonmin.com
+              </a>
+              <span aria-hidden data-reveal-line style={{ '--i': 2 }}
+                    className="mt-10 block h-px w-8 bg-foreground/25" />
+              <ul data-reveal-line style={{ '--i': 3 }}
+                  className="mt-6 flex flex-wrap gap-x-7 gap-y-2 text-sm text-muted">
+                <li><a href="https://github.com/" className="transition-colors duration-180 hover:text-foreground">GitHub</a></li>
+                <li><a href="https://www.notion.so/" className="transition-colors duration-180 hover:text-foreground">Notion</a></li>
+                <li><a href="https://www.linkedin.com/" className="transition-colors duration-180 hover:text-foreground">LinkedIn</a></li>
+              </ul>
+            </div>
+            <div className="px-6 sm:px-12 pb-12 sm:pb-16">
+              <p data-reveal-line style={{ '--i': 5 }}
+                 className="text-2xs text-subtle tracking-[0.06em]">
+                Yang Wonmin · Seoul · 2026
+              </p>
+            </div>
+          </div>
+        </Scene>
+      );
+    }
+
+    /* =========================================================
+     * The deck
+     * ========================================================= */
+
+    function Deck() {
+      useEffect(() => {
+        document.body.classList.remove('detail-route');
+      }, []);
+      return (
+        <DeckProvider>
+          <Header />
+          <SceneIndicator />
+          <SceneCounter />
+          <NextHint />
+          <div className="deck-root" id="deck-root">
+            <SceneIdentity />
+            <ScenePositioning />
+            <SceneProjectsIndex />
+            <SceneFeaturedProject />
+            <SceneProcess />
+            <ScenePrinciples />
+            <SceneContact />
+          </div>
+        </DeckProvider>
+      );
+    }
+
+    /* =========================================================
+     * Detail page
+     * ========================================================= */
+
+    function MetaBlock({ project }) {
+      const parts = [project.year];
+      if (project.role) parts.push(project.role);
+      if (project.domain && project.domain.length) parts.push(project.domain.join(', '));
+      if (project.tools && project.tools.length) parts.push(project.tools.join(', '));
+      return (
+        <dl className="text-sm text-muted leading-[1.65]">
+          <dt className="sr-only">Project meta</dt>
+          <dd className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            {parts.map((part, i) => (
+              <span key={i} className="flex items-baseline gap-2">
+                {i > 0 && <span aria-hidden className="text-subtle">·</span>}
+                <span>{part}</span>
+              </span>
+            ))}
+          </dd>
+        </dl>
+      );
+    }
+
+    function DetailSection({ label, children }) {
+      return (
+        <section>
+          <h2 className="text-xs uppercase tracking-section text-subtle font-medium">{label}</h2>
+          <div className="mt-3 text-base text-foreground/90 max-w-[620px]">{children}</div>
+        </section>
+      );
+    }
+
+    function DetailHeader() {
+      const onNav = (i) => (e) => {
+        e.preventDefault();
+        sessionStorage.setItem('returnScene', String(i));
+        window.location.hash = '#/';
+      };
+      const linkCls = "transition-colors duration-180 ease-editorial hover:text-foreground";
+      return (
+        <header className="flex items-baseline justify-between text-sm text-muted">
+          <a href="#/" onClick={onNav(0)} className={linkCls}>Yang Wonmin</a>
+          <nav className="flex gap-5 sm:gap-7">
+            <a href="#/" onClick={onNav(2)} className={linkCls}>Projects</a>
+            <a href="#/" onClick={onNav(5)} className={linkCls}>Notes</a>
+            <a href="#/" onClick={onNav(1)} className={linkCls}>About</a>
+          </nav>
+        </header>
+      );
+    }
+
+    function BackLink() {
+      const onClick = (e) => {
+        e.preventDefault();
+        sessionStorage.setItem('returnScene', '3'); // scene 04 → index 3
+        window.location.hash = '#/';
+      };
+      return (
+        <a href="#/" onClick={onClick}
+           className="group inline-flex items-baseline gap-1.5 text-sm text-muted transition-colors duration-180 ease-editorial hover:text-foreground">
+          <span aria-hidden className="inline-block transition-transform duration-200 ease-editorial group-hover:-translate-x-0.5">←</span>
+          <span>Back to deck</span>
+        </a>
+      );
+    }
+
+    function DetailPage({ slug }) {
+      useEffect(() => {
+        document.body.classList.add('detail-route');
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        return () => document.body.classList.remove('detail-route');
+      }, []);
+
+      const project = getProjectBySlug(slug);
+      if (!project || !project.sections) {
+        return (
+          <div className="max-w-prose mx-auto px-5 sm:px-8 pt-14 pb-32">
+            <DetailHeader />
+            <main className="pt-16">
+              <p className="text-xs uppercase tracking-section text-subtle font-medium">404</p>
+              <p className="mt-3 text-md text-foreground/90">존재하지 않는 프로젝트입니다.</p>
+              <p className="mt-6"><BackLink /></p>
+            </main>
+          </div>
+        );
+      }
+      return (
+        <div className="max-w-detail mx-auto px-5 sm:px-8 pt-10 sm:pt-14 pb-24 sm:pb-32">
+          <DetailHeader />
+          <main className="pt-8 sm:pt-12">
+            <BackLink />
+            <header className="mt-10 sm:mt-12">
+              <h1 className="text-2xl sm:text-3xl font-medium tracking-editorial text-foreground">{project.title}</h1>
+              <p className="mt-3 text-md text-foreground/85 max-w-[600px] leading-[1.55]">{project.summary}</p>
+              <div className="mt-5"><MetaBlock project={project} /></div>
+            </header>
+            <hr className="my-10 sm:my-12" />
+            <div className="flex flex-col gap-10 sm:gap-12">
+              {SECTION_ORDER.map((key) => {
+                const body = project.sections[key];
+                if (!body) return null;
+                return (
+                  <DetailSection key={key} label={SECTION_LABELS[key]}>
+                    <p className="leading-[1.75]">{body}</p>
+                  </DetailSection>
+                );
+              })}
+            </div>
+            <hr className="mt-16 mb-8" />
+            <BackLink />
+          </main>
+        </div>
+      );
+    }
+
+    /* =========================================================
+     * Root
+     * ========================================================= */
+
+    function App() {
+      const route = useRoute();
+      if (route.name === 'detail') return <DetailPage slug={route.slug} />;
+      return <Deck />;
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

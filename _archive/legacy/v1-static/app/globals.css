@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------
+ * Design tokens — Rauno-inspired editorial portfolio
+ * Single source of truth for color, motion, and reading rhythm.
+ * --------------------------------------------------------------- */
+
+:root {
+  /* Color — warm off-white base */
+  --background:      #f7f4ef;
+  --foreground:      #171717;
+  --muted:           #6f6a63;
+  --subtle:          #9a948c;
+  --border:          rgba(23, 23, 23, 0.10);
+  --border-strong:   rgba(23, 23, 23, 0.18);
+  --hover:           rgba(23, 23, 23, 0.035);
+
+  /* Motion */
+  --ease-out:        cubic-bezier(0.2, 0.6, 0.2, 1);
+  --duration-fast:   160ms;
+  --duration-base:   200ms;
+
+  /* Typographic defaults */
+  --font-feature:    "ss01", "cv11", "calt";
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    "Geist",
+    "Pretendard",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    system-ui,
+    sans-serif;
+  font-feature-settings: var(--font-feature);
+  text-rendering: optimizeLegibility;
+}
+
+/* Inline text links — subtle underline-on-hover */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Selection */
+::selection {
+  background: rgba(23, 23, 23, 0.92);
+  color: #f7f4ef;
+}
+
+/* Hairline horizontal rule */
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+}

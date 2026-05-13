@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yang Wonmin — Portfolio Preview</title>
+
+  <!-- Fonts: Geist (Latin) + Pretendard (Korean) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <!-- Tailwind Play CDN + design tokens -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        fontSize: {
+          '2xs': ['11px', { lineHeight: '1.4'  }],
+          xs:    ['12px', { lineHeight: '1.45' }],
+          sm:    ['13px', { lineHeight: '1.5'  }],
+          base:  ['15px', { lineHeight: '1.7'  }],
+          md:    ['16px', { lineHeight: '1.55' }],
+          lg:    ['18px', { lineHeight: '1.55' }],
+          xl:    ['20px', { lineHeight: '1.5'  }],
+          '2xl': ['24px', { lineHeight: '1.35' }],
+          '3xl': ['28px', { lineHeight: '1.3'  }],
+          '4xl': ['32px', { lineHeight: '1.25' }],
+        },
+        extend: {
+          colors: {
+            background:      'var(--background)',
+            foreground:      'var(--foreground)',
+            muted:           'var(--muted)',
+            subtle:          'var(--subtle)',
+            border:          'var(--border)',
+            'border-strong': 'var(--border-strong)',
+            hover:           'var(--hover)',
+          },
+          fontFamily: {
+            sans: ['Geist', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'system-ui', 'sans-serif'],
+          },
+          maxWidth: {
+            prose:  '680px',
+            detail: '760px',
+          },
+          letterSpacing: {
+            editorial: '-0.005em',
+            section:   '0.12em',
+          },
+          transitionDuration: {
+            180: '180ms',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    :root {
+      --background:      #f7f4ef;
+      --foreground:      #171717;
+      --muted:           #6f6a63;
+      --subtle:          #9a948c;
+      --border:          rgba(23, 23, 23, 0.10);
+      --border-strong:   rgba(23, 23, 23, 0.18);
+      --hover:           rgba(23, 23, 23, 0.035);
+    }
+    html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body {
+      background: var(--background);
+      color: var(--foreground);
+      font-family: "Geist", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      font-feature-settings: "ss01", "cv11", "calt";
+      text-rendering: optimizeLegibility;
+    }
+    ::selection { background: rgba(23,23,23,0.92); color: #f7f4ef; }
+    a { color: inherit; text-decoration: none; }
+    hr { border: 0; border-top: 1px solid var(--border); }
+
+    /* Hover behavior for ProjectRow — title gets a subtle underline,
+       arrow drifts in by ~3px. Quiet but responsive. */
+    .row-link:hover .row-title {
+      text-decoration: underline;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 5px;
+      text-decoration-color: rgba(23,23,23,0.55);
+    }
+    .row-link .row-arrow {
+      opacity: 0;
+      transform: translateX(-3px);
+      transition: opacity 200ms cubic-bezier(0.2,0.6,0.2,1), transform 200ms cubic-bezier(0.2,0.6,0.2,1);
+    }
+    .row-link:hover .row-arrow {
+      opacity: 0.7;
+      transform: translateX(0);
+    }
+  </style>
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useMemo } = React;
+
+    /* ---------------------------------------------------------------
+     * Data — mirrors /data/projects.ts
+     * --------------------------------------------------------------- */
+
+    const SECTION_LABELS = {
+      context: 'Context',
+      problem: 'Problem',
+      system: 'System',
+      execution: 'Execution',
+      impact: 'Impact',
+      artifacts: 'Artifacts',
+      reflection: 'Reflection',
+    };
+    const SECTION_ORDER = ['context','problem','system','execution','impact','artifacts','reflection'];
+
+    const projects = [
+      {
+        slug: 'campit-influencer-marketing-system',
+        title: 'Campit Influencer Marketing System',
+        year: '2024',
+        summary: 'Creator-driven operating system for campsite growth.',
+        role: 'PM · Marketing Operations · No-code Automation',
+        domain: ['Camping Platform', 'Influencer Marketing'],
+        tools: ['Notion', 'Make', 'Slack', 'Google Sheets'],
+        active: true,
+        sections: {
+          context:
+            '캠핑장 운영자들은 인플루언서와의 협업을 시도했지만, 캠페인의 흐름과 결과가 도구마다 흩어져 있어 반복 가능한 운영으로 이어지지 못했다. 운영팀은 매 시즌 새 캠페인을 처음부터 다시 세팅해야 했다.',
+          problem:
+            '섭외, 브리프, 콘텐츠 검수, 정산, 성과 측정이 각각 다른 채널에서 진행되었다. 캠페인이 끝나면 어디서 무엇이 작동했는지 다시 추적하기 어려웠고, 다음 캠페인은 학습 없이 시작되었다.',
+          system:
+            '인플루언서 풀, 캠페인 트래커, 콘텐츠 검수, 성과 리포트를 하나의 Notion 워크스페이스로 연결했다. 반복 작업은 Make와 Slack 알림으로 자동화해, PM 한 명이 동시에 여러 캠페인을 관리할 수 있는 구조를 만들었다.',
+          execution:
+            '첫 분기 동안 6개 캠프장과 12명의 크리에이터가 같은 시스템 안에서 협업했다. 브리프 템플릿, 컨택 시퀀스, 정산 체크리스트를 표준화해 다음 캠페인부터 운영 부담을 줄였다.',
+          impact:
+            '캠페인 준비 시간이 평균적으로 단축되었고, 콘텐츠 게시 누락이 사라졌다. 캠프장별 성과 비교가 가능해지면서, 무엇이 예약 전환에 영향을 주는지 가설을 검증할 수 있는 기반이 생겼다.',
+          artifacts:
+            '캠페인 트래커 · 크리에이터 풀 DB · 브리프 템플릿 · 정산 체크리스트 · 캠페인 후 리포트 포맷.',
+          reflection:
+            '마케팅의 결과보다 운영 구조가 먼저 만들어져야 결과가 반복된다. 이 프로젝트는 그 사실을 가장 짧은 사이클로 확인해 준 작업이었다.',
+        },
+      },
+      {
+        slug: 'portfolio-evidence-mapper',
+        title: 'Portfolio Evidence Mapper',
+        year: '2026',
+        summary: 'A Notion-based evidence pipeline for turning scattered work into portfolio-ready records.',
+        active: false,
+      },
+      {
+        slug: 'plays-lounge-popup-strategy',
+        title: 'Plays Lounge Pop-up Strategy',
+        year: '2025',
+        summary: 'Offline brand experience designed around influencer IP, family space, and fandom conversion.',
+        active: false,
+      },
+      {
+        slug: 'gugok-dakgalbi-brand-launch',
+        title: 'Gugok Dakgalbi Brand Launch',
+        year: '2025',
+        summary: 'Retro F&B brand system inspired by Gangchon memories and local nostalgia.',
+        active: false,
+      },
+    ];
+
+    const getProjectBySlug = (slug) => projects.find((p) => p.slug === slug);
+
+    /* ---------------------------------------------------------------
+     * Hash router
+     * --------------------------------------------------------------- */
+
+    function useRoute() {
+      const [hash, setHash] = useState(() => window.location.hash || '#/');
+      useEffect(() => {
+        const onChange = () => {
+          setHash(window.location.hash || '#/');
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        };
+        window.addEventListener('hashchange', onChange);
+        return () => window.removeEventListener('hashchange', onChange);
+      }, []);
+      return hash;
+    }
+
+    function parseRoute(hash) {
+      const path = hash.replace(/^#/, '') || '/';
+      if (path === '/' || path === '') return { name: 'home' };
+      if (path === '/projects') return { name: 'projects' };
+      const m = path.match(/^\/projects\/(.+)$/);
+      if (m) return { name: 'project-detail', slug: m[1] };
+      if (path === '/notes') return { name: 'notes' };
+      if (path === '/about') return { name: 'about' };
+      return { name: 'not-found' };
+    }
+
+    /* ---------------------------------------------------------------
+     * Components — mirror /components/*.tsx
+     * --------------------------------------------------------------- */
+
+    function SiteShell({ children, width = 'prose' }) {
+      const maxW = width === 'detail' ? 'max-w-detail' : 'max-w-prose';
+      return (
+        <div className="min-h-screen bg-background text-foreground">
+          <div className={`${maxW} mx-auto px-5 sm:px-8 pt-10 sm:pt-14 pb-20 sm:pb-28`}>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </div>
+        </div>
+      );
+    }
+
+    function Header() {
+      const linkCls = "transition-colors duration-180 hover:text-foreground";
+      return (
+        <header className="flex items-baseline justify-between text-sm text-muted">
+          <a href="#/" className={linkCls}>Yang Wonmin</a>
+          <nav className="flex gap-5 sm:gap-6">
+            <a href="#/projects" className={linkCls}>Projects</a>
+            <a href="#/notes"    className={linkCls}>Notes</a>
+            <a href="#/about"    className={linkCls}>About</a>
+          </nav>
+        </header>
+      );
+    }
+
+    function Footer() {
+      const linkCls = "transition-colors duration-180 hover:text-foreground";
+      return (
+        <footer className="mt-24 sm:mt-32 pt-6 text-xs text-subtle">
+          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <span>© 2026 Yang Wonmin</span>
+            <a href="mailto:hello@yangwonmin.com" className={linkCls}>Email</a>
+            <a href="https://github.com/" className={linkCls}>GitHub</a>
+            <a href="https://www.linkedin.com/" className={linkCls}>LinkedIn</a>
+          </div>
+        </footer>
+      );
+    }
+
+    function IdentityStatement() {
+      return (
+        <p className="text-lg sm:text-xl leading-[1.55] text-foreground max-w-[560px]">
+          양원민은 마케팅, 운영, AI 자동화를 연결해{' '}
+          <span className="text-muted">흩어진 일을 반복 가능한 시스템으로 만드는</span>{' '}
+          프로젝트 매니저입니다.
+        </p>
+      );
+    }
+
+    function PrimaryLinks() {
+      const items = [
+        { label: 'Projects', href: '#/projects' },
+        { label: 'Notes',    href: '#/notes' },
+        { label: 'About',    href: '#/about' },
+        { label: 'Contact',  href: 'mailto:hello@yangwonmin.com' },
+      ];
+      return (
+        <ul className="flex flex-col gap-1 text-base">
+          {items.map((item) => (
+            <li key={item.label} className="text-foreground/80">
+              <a href={item.href} className="inline-flex items-baseline gap-2 transition-colors duration-180 hover:text-foreground">
+                <span className="border-b border-transparent hover:border-current">{item.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    function Principles() {
+      const lines = [
+        '흩어진 일을 구조화합니다.',
+        '반복되는 일을 시스템화합니다.',
+        '감각적인 일을 측정 가능하게 만듭니다.',
+        '아이디어를 실행 가능한 단위로 바꿉니다.',
+        '프로젝트가 읽히도록 정리합니다.',
+      ];
+      return (
+        <ul className="text-sm text-muted leading-[1.95]">
+          {lines.map((p) => <li key={p}>{p}</li>)}
+        </ul>
+      );
+    }
+
+    function ProjectRow({ project }) {
+      const { slug, title, year, summary, active } = project;
+      const inner = (
+        <React.Fragment>
+          <div className="flex items-baseline justify-between gap-6">
+            <h3 className={`text-md font-medium tracking-editorial ${active ? 'text-foreground' : 'text-foreground/85'}`}>
+              <span className="row-title">{title}</span>
+              {active && <span aria-hidden className="row-arrow ml-1.5 inline-block text-muted">→</span>}
+            </h3>
+            <span className="shrink-0 text-sm text-subtle tabular-nums leading-snug pt-[2px]">{year}</span>
+          </div>
+          <p className="mt-1.5 text-sm text-muted leading-[1.6] max-w-[520px]">{summary}</p>
+        </React.Fragment>
+      );
+      const base = "block py-5 sm:py-6 border-t border-border last:border-b transition-colors duration-180";
+      if (!active) return <div className={`${base} cursor-default`}>{inner}</div>;
+      return <a href={`#/projects/${slug}`} className={`${base} row-link`}>{inner}</a>;
+    }
+
+    function ProjectIndex() {
+      return (
+        <div className="flex flex-col">
+          {projects.map((p) => <ProjectRow key={p.slug} project={p} />)}
+        </div>
+      );
+    }
+
+    function MetaBlock({ project }) {
+      const parts = [project.year];
+      if (project.role)           parts.push(project.role);
+      if (project.domain?.length) parts.push(project.domain.join(', '));
+      if (project.tools?.length)  parts.push(project.tools.join(', '));
+      return (
+        <dl className="text-sm text-muted leading-[1.65]">
+          <dt className="sr-only">Project meta</dt>
+          <dd className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            {parts.map((part, i) => (
+              <span key={i} className="flex items-baseline gap-2">
+                {i > 0 && <span aria-hidden className="text-subtle">·</span>}
+                <span>{part}</span>
+              </span>
+            ))}
+          </dd>
+        </dl>
+      );
+    }
+
+    function Section({ label, children }) {
+      return (
+        <section>
+          <h2 className="text-xs uppercase tracking-section text-subtle font-medium">{label}</h2>
+          <div className="mt-3 text-base text-foreground/90 max-w-[620px]">{children}</div>
+        </section>
+      );
+    }
+
+    function BackLink({ href, label }) {
+      return (
+        <a href={href} className="group inline-flex items-baseline gap-1.5 text-sm text-muted transition-colors duration-180 hover:text-foreground">
+          <span aria-hidden className="inline-block transition-transform duration-200 group-hover:-translate-x-0.5">←</span>
+          <span>{label}</span>
+        </a>
+      );
+    }
+
+    /* ---------------------------------------------------------------
+     * Pages — mirror /app/**.tsx
+     * --------------------------------------------------------------- */
+
+    function HomePage() {
+      return (
+        <SiteShell>
+          <div className="pt-14 sm:pt-20">
+            <IdentityStatement />
+            <div className="mt-14 sm:mt-16"><PrimaryLinks /></div>
+            <div className="mt-14 sm:mt-16"><Principles /></div>
+          </div>
+        </SiteShell>
+      );
+    }
+
+    function ProjectsPage() {
+      return (
+        <SiteShell>
+          <div className="pt-12 sm:pt-16">
+            <header className="mb-10 sm:mb-12">
+              <p className="text-xs uppercase tracking-section text-subtle font-medium">Projects</p>
+              <p className="mt-3 text-md text-foreground/90 max-w-[520px] leading-[1.55]">
+                마케팅, 운영, AI 자동화로 만든 작업의 인덱스.
+              </p>
+            </header>
+            <ProjectIndex />
+          </div>
+        </SiteShell>
+      );
+    }
+
+    function ProjectDetailPage({ slug }) {
+      const project = getProjectBySlug(slug);
+      if (!project || !project.sections) return <NotFoundPage />;
+      return (
+        <SiteShell width="detail">
+          <div className="pt-8 sm:pt-12">
+            <BackLink href="#/projects" label="Projects" />
+            <header className="mt-10 sm:mt-12">
+              <h1 className="text-2xl sm:text-3xl font-medium tracking-editorial text-foreground">
+                {project.title}
+              </h1>
+              <p className="mt-3 text-md text-foreground/85 max-w-[600px] leading-[1.55]">
+                {project.summary}
+              </p>
+              <div className="mt-5"><MetaBlock project={project} /></div>
+            </header>
+            <hr className="my-10 sm:my-12" />
+            <div className="flex flex-col gap-10 sm:gap-12">
+              {SECTION_ORDER.map((key) => {
+                const body = project.sections[key];
+                if (!body) return null;
+                return (
+                  <Section key={key} label={SECTION_LABELS[key]}>
+                    <p className="leading-[1.75]">{body}</p>
+                  </Section>
+                );
+              })}
+            </div>
+            <hr className="mt-16 mb-8" />
+            <BackLink href="#/projects" label="All projects" />
+          </div>
+        </SiteShell>
+      );
+    }
+
+    function NotesPage() {
+      return (
+        <SiteShell>
+          <div className="pt-12 sm:pt-16">
+            <p className="text-xs uppercase tracking-section text-subtle font-medium">Notes</p>
+            <p className="mt-3 text-md text-foreground/90 max-w-[520px] leading-[1.55]">
+              작업 중 남긴 짧은 기록. 곧 공개됩니다.
+            </p>
+          </div>
+        </SiteShell>
+      );
+    }
+
+    function AboutPage() {
+      return (
+        <SiteShell>
+          <div className="pt-12 sm:pt-16">
+            <p className="text-xs uppercase tracking-section text-subtle font-medium">About</p>
+            <p className="mt-3 text-md text-foreground/90 max-w-[520px] leading-[1.55]">
+              짧은 자기 소개와 일하는 방식. 곧 공개됩니다.
+            </p>
+          </div>
+        </SiteShell>
+      );
+    }
+
+    function NotFoundPage() {
+      return (
+        <SiteShell>
+          <div className="pt-12 sm:pt-16">
+            <p className="text-xs uppercase tracking-section text-subtle font-medium">404</p>
+            <p className="mt-3 text-md text-foreground/90 leading-[1.55]">존재하지 않는 페이지입니다.</p>
+            <p className="mt-6 text-sm"><a href="#/" className="text-muted hover:text-foreground transition-colors duration-180">← Home</a></p>
+          </div>
+        </SiteShell>
+      );
+    }
+
+    /* ---------------------------------------------------------------
+     * Root
+     * --------------------------------------------------------------- */
+
+    function App() {
+      const hash = useRoute();
+      const route = parseRoute(hash);
+      switch (route.name) {
+        case 'home':           return <HomePage />;
+        case 'projects':       return <ProjectsPage />;
+        case 'project-detail': return <ProjectDetailPage slug={route.slug} />;
+        case 'notes':          return <NotesPage />;
+        case 'about':          return <AboutPage />;
+        default:               return <NotFoundPage />;
+      }
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
