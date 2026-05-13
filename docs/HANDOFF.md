@@ -2,7 +2,9 @@
 
 ## 1. Current Status
 
-This project is now organized around the following final direction:
+**✅ PRODUCTION LIVE + VISUAL POLISH COMPLETE** — Portfolio deployed with rauno.me-level visual refinement.
+
+Project organized around the following final direction:
 
 ```text
 v2-deck only
@@ -10,9 +12,38 @@ horizontal slide deck
 rauno-style neighboring slides
 content MVP with two active Campit projects
 v1 removed
+GitHub: https://github.com/yangminguy/portfolio.git
+Live: https://portfolio-delta-tawny-qmwpawi6wv.vercel.app
 ```
 
 The goal is not to build a generic portfolio. The goal is to create a quiet, editorial, horizontal portfolio deck that presents Yang Wonmin as a person who turns scattered work into repeatable systems.
+
+### Recent Updates (Session 3)
+
+- **P0-P2 Complete**: All foundation phases verified
+- **Visual Polish Phase**: ✅ Complete
+  - Implemented cool blue accent color (#1B6CB0) throughout UI
+  - Improved motion: cubic-bezier(0.15, 0.8, 0.25, 1) for snappier interactions
+  - Enhanced SceneIndicator with accent color active state
+  - Added Header link hover underlines with accent decoration
+  - Improved Scene labels: uppercase + letter-spacing (0.08em)
+  - Added subtle box-shadow to scene cards for depth
+  - Project/contact links now use accent color on hover
+  - All build errors: 0, TypeScript errors: 0
+- **P4 Status**: Campit detail pages fully functional with complete sections data
+- **Live Verification**: Homepage, Projects scene, and detail pages all verified working
+
+### Recent Updates (Session 2)
+
+- **P1 — Build Verification**: ✅ Complete. All builds pass, no TypeScript errors.
+- **P2 — Horizontal Deck Polish**: ✅ Complete. 1440px layout verified, scroll-snap works, indicator responsive, 7 scenes render correctly.
+- **SceneContact.tsx**: ✅ Updated. Removed all secondary links, kept only email (yangminguy@gmail.com).
+- **P7 — Vercel Deployment**: ✅ Complete. 
+  - GitHub repository created and code pushed
+  - Vercel project created with Framework Preset: Next.js
+  - Output Directory configured: .next (with Override enabled)
+  - All verification tests passed (scene loading, keyboard navigation, email link, responsive layout)
+  - Production domain live: https://portfolio-delta-tawny-qmwpawi6wv.vercel.app
 
 ## 2. Final Baseline
 

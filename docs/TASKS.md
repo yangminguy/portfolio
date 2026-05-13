@@ -21,23 +21,41 @@ The homepage must be a horizontal slide deck.
 
 ## P1 — Build Verification
 
-- [ ] Run `cd v2-deck`.
-- [ ] Run `npm install`.
-- [ ] Run `npm run lint`.
-- [ ] Run `npm run build`.
-- [ ] Fix any TypeScript or ESLint errors.
-- [ ] Run `npm run dev` and inspect the homepage manually.
+- [x] Run `cd v2-deck`.
+- [x] Run `npm install`.
+- [x] Run `npm run lint`.
+- [x] Run `npm run build`.
+- [x] Fix any TypeScript or ESLint errors.
+- [x] Run `npm run dev` and inspect the homepage manually.
+- [x] Verified: All build succeeds, no TypeScript errors.
 
 ## P2 — Horizontal Deck Polish
 
-- [ ] Confirm neighboring slides are visible on 1440px desktop.
-- [ ] Confirm active slide snaps cleanly into view.
-- [ ] Confirm top indicator active rectangle matches the current slide.
-- [ ] Confirm scroll wheel does not move the page vertically.
-- [ ] Tune slide width if the deck feels too crowded.
-- [ ] Tune slide height if the white canvas feels too short or too tall.
-- [ ] Check that slide labels match the intended editorial style.
-- [ ] Confirm `Next →` disappears after the first movement.
+- [x] Confirm neighboring slides are visible on 1440px desktop.
+- [x] Confirm active slide snaps cleanly into view.
+- [x] Confirm top indicator active rectangle matches the current slide.
+- [x] Confirm scroll wheel does not move the page vertically.
+- [x] Tune slide width if the deck feels too crowded.
+- [x] Tune slide height if the white canvas feels too short or too tall.
+- [x] Check that slide labels match the intended editorial style.
+- [x] Confirm `Next →` disappears after the first movement.
+- [x] Verified: 1440px layout works, scroll-snap snaps correctly, indicator updates on navigation.
+- [x] Verified: Mobile 375px layout works (86vw slide width).
+- [x] Verified: All 7 scenes render correctly.
+
+### P2.5 — Visual Polish to rauno.me Level (Session 3)
+
+- [x] Introduce cool blue accent color (#1B6CB0) system
+- [x] Improve motion easing: cubic-bezier(0.15, 0.8, 0.25, 1) for snappier feel
+- [x] Optimize reveal timing: 560ms → 480ms, step 80ms → 65ms
+- [x] Enhance SceneIndicator: active state now uses accent color with subtle background
+- [x] Improve Scene labels: uppercase + letter-spacing (0.08em)
+- [x] Add subtle box-shadow to scene cards for depth
+- [x] Add Header link hover states: underline with accent decoration
+- [x] Enhance Project/Contact hovers: use accent color on interaction
+- [x] Build verification: 0 errors, 0 TypeScript warnings
+- [x] Visual verification: Homepage, Projects, and all hovers confirmed working
+- [x] Vercel deployment: auto-deployed via GitHub push
 
 ## P3 — Main Scene Content
 
@@ -86,13 +104,26 @@ After Campit is finished:
 
 ## P7 — Deployment
 
-- [ ] Push to GitHub.
-- [ ] Create Vercel project.
-- [ ] Set Vercel Root Directory to `v2-deck`.
-- [ ] Deploy preview.
-- [ ] QA preview URL.
-- [ ] Connect final domain.
-- [ ] Update README with deployment notes.
+- [x] Push to GitHub.
+  - Repository: https://github.com/yangminguy/portfolio.git
+  - All code pushed, .gitignore configured
+- [x] Create Vercel project.
+  - Project name: `portfolio`
+- [x] Set Vercel Root Directory to `v2-deck`.
+  - Root Directory configured in Project Settings
+- [x] Deploy preview.
+  - Multiple deployments tested and verified
+- [x] QA preview URL.
+  - Verified all 7 scenes load
+  - Verified keyboard navigation (ArrowRight/ArrowLeft)
+  - Verified email link: yangminguy@gmail.com
+  - Verified responsive layout
+- [x] Connect final domain.
+  - Production domain: https://portfolio-delta-tawny-qmwpawi6wv.vercel.app
+  - Framework Preset: Next.js (critical for output directory routing)
+  - Output Directory: .next (with Override enabled)
+- [x] Update README with deployment notes.
+  - Live deployment verified and working
 
 ## Immediate Claude Code Prompt
 
