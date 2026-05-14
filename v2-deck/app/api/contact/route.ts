@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const MAX_MESSAGE_LENGTH = 2000;
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type ContactRequestBody = {
-  email?: unknown;
   message?: unknown;
-  website?: unknown;
-  honeypot?: unknown;
 };
 
 function jsonResponse(status: number, body: { ok: boolean; error?: string }) {
@@ -30,21 +26,7 @@ export async function POST(request: NextRequest) {
     return jsonResponse(400, { ok: false, error: "Invalid JSON body." });
   }
 
-  const honeypot = body.website ?? body.honeypot;
-  if (typeof honeypot === "string" && honeypot.trim().length > 0) {
-    return jsonResponse(200, { ok: true });
-  }
-
-  const email = typeof body.email === "string" ? body.email.trim() : "";
   const message = typeof body.message === "string" ? body.message.trim() : "";
-
-  if (!email) {
-    return jsonResponse(400, { ok: false, error: "Email is required." });
-  }
-
-  if (!EMAIL_PATTERN.test(email)) {
-    return jsonResponse(400, { ok: false, error: "Email format is invalid." });
-  }
 
   if (!message) {
     return jsonResponse(400, { ok: false, error: "Message is required." });
@@ -66,14 +48,10 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  // TODO: Add a lightweight IP-based rate limiter here before insert.
-  // A deploy-safe option is a small Redis/Vercel KV counter keyed by IP + time window.
-  // const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-
   let insertResponse: Response;
 
   try {
-    insertResponse = await fetch(`${supabaseUrl}/rest/v1/contacts`, {
+    insertResponse = await fetch(`${supabaseUrl}/rest/v1/messages`, {
       method: "POST",
       headers: {
         apikey: serviceRoleKey,
@@ -81,19 +59,19 @@ export async function POST(request: NextRequest) {
         "Content-Type": "application/json",
         Prefer: "return=minimal",
       },
-      body: JSON.stringify({ email, message }),
+      body: JSON.stringify({ message }),
     });
   } catch {
     return jsonResponse(500, {
       ok: false,
-      error: "Failed to save contact message.",
+      error: "Failed to save message.",
     });
   }
 
   if (!insertResponse.ok) {
     return jsonResponse(500, {
       ok: false,
-      error: "Failed to save contact message.",
+      error: "Failed to save message.",
     });
   }
 

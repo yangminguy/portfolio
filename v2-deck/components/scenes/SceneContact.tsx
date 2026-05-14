@@ -17,17 +17,13 @@ type FormStatus = "idle" | "sending" | "success" | "error";
  */
 export function SceneContact() {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [senderEmail, setSenderEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [website, setWebsite] = useState("");
   const [status, setStatus] = useState<FormStatus>("idle");
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "error">("idle");
 
   const resetForm = () => {
     setIsFormOpen(false);
-    setSenderEmail("");
     setMessage("");
-    setWebsite("");
     setStatus("idle");
   };
 
@@ -51,11 +47,7 @@ export function SceneContact() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: senderEmail,
-          message,
-          website,
-        }),
+        body: JSON.stringify({ message }),
       });
 
       const data = (await response.json()) as { ok?: boolean };
@@ -65,9 +57,7 @@ export function SceneContact() {
         return;
       }
 
-      setSenderEmail("");
       setMessage("");
-      setWebsite("");
       setStatus("success");
       setIsFormOpen(false);
     } catch {
@@ -101,7 +91,7 @@ export function SceneContact() {
                 }}
                 className="w-fit text-lg sm:text-xl text-foreground underline-offset-[6px] decoration-foreground/30 hover:text-accent hover:decoration-accent/50 hover:underline transition-colors duration-180 ease-editorial"
               >
-                Email me
+                메시지 남기기
               </button>
               {/* TODO: Add public/resume-yang-wonmin.pdf before publishing this download link. */}
               <a
@@ -109,7 +99,7 @@ export function SceneContact() {
                 download
                 className="w-fit text-lg sm:text-xl text-muted underline-offset-[6px] decoration-foreground/20 hover:text-accent hover:decoration-accent/50 hover:underline transition-colors duration-180 ease-editorial"
               >
-                Download resume
+                이력서 다운로드
               </a>
             </div>
 
@@ -118,7 +108,7 @@ export function SceneContact() {
               onClick={handleCopyEmail}
               className="w-fit text-sm text-subtle underline-offset-[5px] decoration-foreground/20 hover:text-accent hover:decoration-accent/50 hover:underline transition-colors duration-180 ease-editorial"
             >
-              Copy email
+              이메일 복사
             </button>
           </div>
 
@@ -128,11 +118,11 @@ export function SceneContact() {
             className="mt-5 min-h-5 text-sm text-muted"
             aria-live="polite"
           >
-            {copyStatus === "copied" && <p>{CONTACT_EMAIL} copied.</p>}
-            {copyStatus === "error" && <p>Please copy manually: {CONTACT_EMAIL}</p>}
-            {status === "success" && <p>Message saved. Thank you.</p>}
+            {copyStatus === "copied" && <p>{CONTACT_EMAIL} 복사됨.</p>}
+            {copyStatus === "error" && <p>수동으로 복사해주세요: {CONTACT_EMAIL}</p>}
+            {status === "success" && <p>메시지가 저장되었습니다. 감사합니다.</p>}
             {status === "error" && (
-              <p>Something went wrong. Please try again or copy my email.</p>
+              <p>문제가 발생했습니다. 다시 시도해주세요.</p>
             )}
           </div>
 
@@ -141,34 +131,6 @@ export function SceneContact() {
               onSubmit={handleSubmit}
               className="mt-8 flex w-full max-w-md flex-col gap-4 text-left"
             >
-              <div className="hidden" aria-hidden="true">
-                <label htmlFor="contact-website">Website</label>
-                <input
-                  id="contact-website"
-                  name="website"
-                  tabIndex={-1}
-                  autoComplete="off"
-                  value={website}
-                  onChange={(event) => setWebsite(event.target.value)}
-                />
-              </div>
-
-              <label className="flex flex-col gap-2 text-sm text-muted" htmlFor="contact-email">
-                Your email
-                <input
-                  id="contact-email"
-                  name="email"
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  required
-                  value={senderEmail}
-                  onChange={(event) => setSenderEmail(event.target.value)}
-                  className="min-h-12 rounded-none border-b border-border bg-transparent px-0 py-3 text-base text-foreground outline-none transition-colors duration-180 ease-editorial placeholder:text-subtle focus:border-foreground"
-                  placeholder="sender@example.com"
-                />
-              </label>
-
               <label className="flex flex-col gap-2 text-sm text-muted" htmlFor="contact-message">
                 Message
                 <textarea
@@ -179,7 +141,7 @@ export function SceneContact() {
                   value={message}
                   onChange={(event) => setMessage(event.target.value)}
                   className="min-h-32 resize-y rounded-none border-b border-border bg-transparent px-0 py-3 text-base leading-7 text-foreground outline-none transition-colors duration-180 ease-editorial placeholder:text-subtle focus:border-foreground"
-                  placeholder="Tell me what you would like to build."
+                  placeholder="메시지를 남겨주세요."
                 />
               </label>
 
@@ -189,7 +151,7 @@ export function SceneContact() {
                   disabled={status === "sending"}
                   className="w-fit text-base text-foreground underline-offset-[6px] decoration-foreground/30 hover:text-accent hover:decoration-accent/50 hover:underline disabled:cursor-wait disabled:text-subtle"
                 >
-                  {status === "sending" ? "Sending..." : "Send"}
+                  {status === "sending" ? "전송 중..." : "전송"}
                 </button>
                 <button
                   type="button"
@@ -197,7 +159,7 @@ export function SceneContact() {
                   disabled={status === "sending"}
                   className="w-fit text-base text-muted underline-offset-[6px] decoration-foreground/20 hover:text-accent hover:decoration-accent/50 hover:underline disabled:cursor-wait disabled:text-subtle"
                 >
-                  Cancel
+                  취소
                 </button>
               </div>
             </form>
