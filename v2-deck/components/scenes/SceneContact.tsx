@@ -90,22 +90,33 @@ export function SceneContact() {
           <div
             data-reveal-line
             style={{ ["--i" as never]: 1 }}
-            className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6"
+            className="mt-9 flex flex-col items-start gap-3"
           >
-            <button
-              type="button"
-              onClick={() => {
-                setIsFormOpen(true);
-                setStatus("idle");
-              }}
-              className="w-fit text-lg sm:text-xl text-foreground underline-offset-[6px] decoration-foreground/30 hover:text-accent hover:decoration-accent/50 hover:underline transition-colors duration-180 ease-editorial"
-            >
-              Email me
-            </button>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsFormOpen(true);
+                  setStatus("idle");
+                }}
+                className="w-fit text-lg sm:text-xl text-foreground underline-offset-[6px] decoration-foreground/30 hover:text-accent hover:decoration-accent/50 hover:underline transition-colors duration-180 ease-editorial"
+              >
+                Email me
+              </button>
+              {/* TODO: Add public/resume-yang-wonmin.pdf before publishing this download link. */}
+              <a
+                href="/resume-yang-wonmin.pdf"
+                download
+                className="w-fit text-lg sm:text-xl text-muted underline-offset-[6px] decoration-foreground/20 hover:text-accent hover:decoration-accent/50 hover:underline transition-colors duration-180 ease-editorial"
+              >
+                Download resume
+              </a>
+            </div>
+
             <button
               type="button"
               onClick={handleCopyEmail}
-              className="w-fit text-lg sm:text-xl text-muted underline-offset-[6px] decoration-foreground/20 hover:text-accent hover:decoration-accent/50 hover:underline transition-colors duration-180 ease-editorial"
+              className="w-fit text-sm text-subtle underline-offset-[5px] decoration-foreground/20 hover:text-accent hover:decoration-accent/50 hover:underline transition-colors duration-180 ease-editorial"
             >
               Copy email
             </button>
