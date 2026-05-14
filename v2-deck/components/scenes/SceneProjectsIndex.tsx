@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Scene } from "@/components/deck/Scene";
 import { projects } from "@/data/projects";
+import { ProjectDashboardOverlay } from "@/components/overlay/ProjectDashboardOverlay";
 
 /**
  * Scene 04 — Projects Index
@@ -18,10 +19,12 @@ import { projects } from "@/data/projects";
  */
 export function SceneProjectsIndex() {
   const [active, setActive] = useState(0);
+  const [selectedProjectSlug, setSelectedProjectSlug] = useState<string | null>(null);
   const current = projects[active];
 
   return (
-    <Scene index={3} ariaLabel="Projects">
+    <>
+      <Scene index={3} ariaLabel="Projects">
       <div className="flex w-full flex-col justify-center">
         <div className="px-6 sm:px-12 max-w-[820px] w-full">
           <p
@@ -77,12 +80,13 @@ export function SceneProjectsIndex() {
                   onFocus={() => setActive(i)}
                 >
                   {p.active ? (
-                    <Link
-                      href={`/projects/${p.slug}`}
-                      className="block"
+                    <button
+                      onClick={() => setSelectedProjectSlug(p.slug)}
+                      className="block w-full text-left cursor-pointer"
+                      aria-label={`Open ${p.koreanTitle ?? p.title}`}
                     >
                       {RowInner}
-                    </Link>
+                    </button>
                   ) : (
                     <div
                       tabIndex={0}
@@ -116,5 +120,13 @@ export function SceneProjectsIndex() {
         </div>
       </div>
     </Scene>
+
+      {selectedProjectSlug && (
+        <ProjectDashboardOverlay
+          projectSlug={selectedProjectSlug}
+          onClose={() => setSelectedProjectSlug(null)}
+        />
+      )}
+    </>
   );
 }

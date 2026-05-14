@@ -34,6 +34,8 @@ export type Project = {
     system: string;
     result: string;
   };
+  /** Dashboard overlay content — new briefing format */
+  dashboardData?: PortfolioProject;
 };
 
 export const SECTION_LABELS: Record<ProjectSectionKey, string> = {
@@ -55,6 +57,77 @@ export const SECTION_ORDER: ProjectSectionKey[] = [
   "artifacts",
   "reflection",
 ];
+
+/* ---------------------------------------------------------------
+ * Dashboard Overlay Types (for new project briefing format)
+ * --------------------------------------------------------------- */
+
+export type ProjectMetric = {
+  label: string;
+  value: string;
+  description?: string;
+};
+
+export type ProjectSystemFlowItem = {
+  title: string;
+  description?: string;
+};
+
+export type ProjectExecutionGroup = {
+  title: string;
+  items: string[];
+};
+
+export type PortfolioProject = {
+  slug: string;
+  title: string;
+  oneLiner: string;
+  subtitle: string;
+  period: string;
+  role: string;
+  category: string;
+  keywords: string[];
+
+  metrics: ProjectMetric[];
+
+  problem: {
+    context: string;
+    before: string[];
+    coreProblem: string;
+    whyItMatters?: string;
+  };
+
+  system: {
+    approach: string;
+    flow: ProjectSystemFlowItem[];
+    contentStrategy?: string;
+    inputProcessOutputImpact?: {
+      input: string[];
+      process: string[];
+      output: string[];
+      impact: string[];
+    };
+  };
+
+  execution: {
+    groups: ProjectExecutionGroup[];
+  };
+
+  impact: {
+    metrics: ProjectMetric[];
+    result: string;
+    learning: string;
+  };
+
+  originalContent?: {
+    problem?: string;
+    approach?: string;
+    whatIBuilt?: string[];
+    contentStrategy?: string;
+    result?: string;
+    learning?: string;
+  };
+};
 
 export const projects: Project[] = [
   {
@@ -83,6 +156,178 @@ export const projects: Project[] = [
         "150명 인플루언서 풀 운영 체계 · 인플루언서 등급화 기준 · 셀러-인플루언서 매칭 흐름 · 협찬 제안서 · 개인화 페이지 · 협찬 콘텐츠 가이드라인 · AI 기반 일정·성과 관리 체계 · 성과 리포팅 자동화 구조 · A/B 테스트 기반 협찬 효율 측정 방식",
       reflection:
         "마케팅 성과는 단순히 더 많은 콘텐츠를 만드는 것만으로 나오지 않습니다. 콘텐츠가 고객의 어떤 의사결정 순간에 개입하는지, 어떤 정보를 전달해야 예약으로 이어지는지, 그리고 그 과정을 반복 가능한 운영 구조로 만들 수 있는지가 핵심이었습니다.",
+    },
+    dashboardData: {
+      slug: "campit-influencer-marketing-system",
+      title: "Campit Influencer Marketing System",
+      oneLiner:
+        "일회성 인플루언서 협찬을 150명 이상의 인플루언서 풀, 콘텐츠 운영, 성과 리포팅이 연결된 반복 가능한 마케팅 플라이휠로 전환했습니다.",
+      subtitle:
+        "150명 이상의 인플루언서 풀을 구축하고, 협찬 운영·콘텐츠 가이드·성과 리포팅·AI 자동화 관리 체계를 연결해 캠핏의 입점 캠핑장 마케팅 성과를 만든 Zero-to-One 프로젝트",
+      period: "2024.09 – 2024.10",
+      role: "초기 기획 · 운영 설계 · 인플루언서 풀 구축 · 자동화 관리 체계 구축",
+      category: "Influencer Marketing / Partnership Operations / Zero-to-One System Building",
+      keywords: [
+        "Influencer Marketing",
+        "AI Operation",
+        "No-code Automation",
+        "Partnership",
+        "Camping Platform",
+        "Growth",
+        "Content Strategy",
+      ],
+      metrics: [
+        {
+          label: "인플루언서 풀 구축 및 운영",
+          value: "150명+",
+        },
+        {
+          label: "대표 콘텐츠 조회수 기록",
+          value: "1,398만+",
+        },
+        {
+          label: "6개월간 광고 효과 창출",
+          value: "1.2억 원+",
+        },
+        {
+          label: "인플루언서 방문 캠핑장 평균 매출 증가",
+          value: "30%+",
+        },
+      ],
+      problem: {
+        context:
+          "캠핏은 입점 캠핑장의 마케팅 성과를 만들어내고, 이를 통해 플랫폼의 유료 플랜 확장 가능성을 증명해야 하는 상황이었습니다.",
+        before: [
+          "협찬 대상 선정이 개별 건 중심으로 운영됨",
+          "콘텐츠 업로드, 링크 전달, 협찬사 커뮤니케이션이 하나의 흐름으로 연결되지 않음",
+          "성과 확인과 리포팅이 분리되어 반복 실행이 어려움",
+          "캠핑장의 실제 경험 정보가 콘텐츠 안에서 충분히 전달되지 않음",
+        ],
+        coreProblem:
+          "문제는 인플루언서를 더 많이 섭외하는 것이 아니라, 인플루언서 콘텐츠를 캠핑장 매출과 플랫폼 성장에 연결되는 반복 가능한 마케팅 구조로 만드는 것이었습니다.",
+        whyItMatters:
+          "캠핑장은 호텔과 달리 사진만으로 공간의 매력을 충분히 전달하기 어렵기 때문에, 실제 자리감·뷰·동선·편의시설·체류 경험을 전달하는 콘텐츠 구조가 필요했습니다.",
+      },
+      system: {
+        approach:
+          "GA 기반 예약 퍼널과 콘텐츠 소비 흐름을 보며, 인플루언서의 상세한 캠핑장 소개 콘텐츠가 예약 의사결정에 영향을 줄 수 있다고 판단했습니다. 이후 FGI와 콜드메일을 통해 인플루언서 생태계를 파악하고, 150명 이상의 인플루언서 풀을 구축했습니다.",
+        flow: [
+          { title: "GA 예약 퍼널 분석" },
+          { title: "인플루언서 생태계 리서치" },
+          { title: "150명+ 인플루언서 풀 구축" },
+          { title: "등급화 기준 설계" },
+          { title: "셀러-인플루언서 매칭" },
+          { title: "콘텐츠 가이드 제공" },
+          { title: "개인화 페이지 운영" },
+          { title: "성과 리포팅 자동화" },
+          { title: "협찬 효율 개선" },
+        ],
+        inputProcessOutputImpact: {
+          input: ["인플루언서 풀", "캠핑장 정보", "예약 퍼널 데이터"],
+          process: ["등급화", "매칭", "콘텐츠 가이드", "성과 추적"],
+          output: ["개인화 페이지", "협찬 콘텐츠", "성과 리포트"],
+          impact: ["매출 증가", "광고 효과", "입점 캠핑장 증가"],
+        },
+        contentStrategy:
+          "운영 과정에서 단순히 조회수가 높은 콘텐츠가 매출로 이어지지 않는 경우가 많다는 점을 확인했습니다. 그래서 콘텐츠 방향을 '예쁜 캠핑장 소개'가 아니라, 캠핑장의 고유한 이야기와 실제 이용 경험을 전달하는 방식으로 조정했습니다.",
+      },
+      execution: {
+        groups: [
+          {
+            title: "Pool & Criteria",
+            items: [
+              "150명 이상의 인플루언서 풀 구축 및 운영",
+              "인플루언서 등급화 기준과 등급별 협찬 조건 정리",
+            ],
+          },
+          {
+            title: "Matching & Partnership",
+            items: [
+              "셀러-인플루언서 매칭 흐름 설계",
+              "협찬 제안서 작성 및 셀러 대상 발송",
+            ],
+          },
+          {
+            title: "Content System",
+            items: [
+              "브랜딩화된 인플루언서 개인화 페이지 구현",
+              "협찬 콘텐츠 가이드라인 설계",
+            ],
+          },
+          {
+            title: "Reporting & Automation",
+            items: [
+              "AI 기반 일정·콘텐츠·성과 관리 체계 구축",
+              "협찬사와 캠지기 대상 성과 리포팅 자동화",
+              "샵바이 매출 통계를 활용한 협찬 효율 측정 방식 설계",
+            ],
+          },
+          {
+            title: "Optimization & Expansion",
+            items: [
+              "협찬 효율 개선을 위한 A/B 테스트 및 검증",
+              "글램핑·카라반·펜션 영역 확장 실험",
+            ],
+          },
+        ],
+      },
+      impact: {
+        metrics: [
+          {
+            label: "인플루언서 풀 구축 및 운영",
+            value: "150명+",
+          },
+          {
+            label: "대표 콘텐츠 조회수 기록",
+            value: "1,398만+",
+          },
+          {
+            label: "6개월간 광고 효과 창출",
+            value: "1.2억 원+",
+          },
+          {
+            label: "인플루언서 방문 캠핑장 평균 매출 증가",
+            value: "30%+",
+          },
+          {
+            label: "신규 입점 캠핑장 수 증가",
+            value: "30%+",
+          },
+          {
+            label: "A/B 테스트 기반 협찬 효율 상승 구조 안정화",
+            value: "30%+",
+          },
+        ],
+        result:
+          "인플루언서 협찬을 개별 커뮤니케이션 중심의 일회성 캠페인에서 반복 가능한 마케팅 운영 시스템으로 전환했습니다. 150명 이상의 인플루언서 풀을 기반으로 협찬 매칭, 콘텐츠 제작, 성과 확인, 리포팅이 이어지는 구조를 만들었고, 이를 통해 마케팅 비용 없이도 플라이휠 구조만으로 약 6개월간 1.2억 원 이상의 광고 효과를 창출했습니다.",
+        learning:
+          "이 프로젝트를 통해 마케팅 성과는 단순히 더 많은 콘텐츠를 만드는 것만으로 나오지 않는다는 점을 배웠습니다. 중요한 것은 콘텐츠가 고객의 어떤 의사결정 순간에 개입하는지, 어떤 정보를 전달해야 예약으로 이어지는지, 그리고 그 과정을 반복 가능한 운영 구조로 만들 수 있는지였습니다.",
+      },
+      originalContent: {
+        problem:
+          "캠핏은 입점 캠핑장의 마케팅 성과를 만들어내고, 이를 통해 플랫폼의 유료 플랜 확장 가능성을 증명해야 하는 상황이었습니다. 기존 인플루언서 협찬은 개별 건 중심으로 운영되고 있었고, 협찬 대상 선정, 콘텐츠 업로드, 링크 전달, 협찬사 커뮤니케이션, 성과 확인이 하나의 흐름으로 연결되지 않아 반복 실행과 확장이 어려웠습니다.",
+        approach:
+          "GA 기반 예약 퍼널과 콘텐츠 소비 흐름을 보며, 인플루언서의 상세한 캠핑장 소개 콘텐츠가 예약 의사결정에 영향을 줄 수 있다고 판단했습니다. FGI와 콜드메일을 통해 인플루언서 생태계를 파악하고, 150명 이상의 인플루언서 풀을 구축했습니다. 협찬 운영을 등급화·매칭·콘텐츠 가이드·개인화 페이지·성과 리포팅이 연결된 하나의 운영 시스템으로 설계했습니다.",
+        whatIBuilt: [
+          "150명 이상의 인플루언서 풀 구축 및 운영",
+          "인플루언서 등급화 기준과 등급별 협찬 조건 정리",
+          "셀러-인플루언서 매칭 흐름 설계",
+          "협찬 제안서 작성 및 셀러 대상 발송",
+          "브랜딩화된 인플루언서 개인화 페이지 구현",
+          "협찬 콘텐츠 가이드라인 설계",
+          "AI 기반 일정·콘텐츠·성과 관리 체계 구축",
+          "협찬사와 캠지기 대상 성과 리포팅 자동화",
+          "샵바이 매출 통계를 활용한 협찬 효율 측정 방식 설계",
+          "협찬 효율 개선을 위한 A/B 테스트 및 검증",
+          "글램핑·카라반·펜션 영역 확장 실험",
+        ],
+        contentStrategy:
+          "운영 과정에서 조회수가 높은 콘텐츠가 매출로 이어지지 않는 경우가 많다는 점을 확인했습니다. 콘텐츠 방향을 '예쁜 캠핑장 소개'가 아니라 캠핑장의 고유한 이야기와 실제 이용 경험을 전달하는 방식으로 조정했습니다. 협찬 콘텐츠를 단순 노출물이 아니라, 캠핑장을 이해시키고 예약을 설득하는 마케팅 자산으로 설계했습니다.",
+        result:
+          "인플루언서 협찬을 일회성 캠페인에서 반복 가능한 마케팅 운영 시스템으로 전환했습니다. 150명 이상의 인플루언서 풀을 기반으로 협찬 매칭, 콘텐츠 제작, 성과 확인, 리포팅이 이어지는 구조를 만들었고, 마케팅 비용 없이 플라이휠 구조만으로 약 6개월간 1.2억 원 이상의 광고 효과를 창출했습니다. 대표 콘텐츠는 1,398만 조회수를 기록했고, 인플루언서 방문 캠핑장의 매출은 평균 30% 이상 증가했습니다. 신규 입점 캠핑장 수도 30% 증가했습니다.",
+        learning:
+          "마케팅 성과는 단순히 더 많은 콘텐츠를 만드는 것만으로 나오지 않습니다. 콘텐츠가 고객의 어떤 의사결정 순간에 개입하는지, 어떤 정보를 전달해야 예약으로 이어지는지, 그리고 그 과정을 반복 가능한 운영 구조로 만들 수 있는지가 핵심이었습니다.",
+      },
     },
   },
   {
