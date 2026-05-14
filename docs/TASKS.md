@@ -59,48 +59,42 @@ The homepage must be a horizontal slide deck.
 
 ## P3 — Main Scene Content
 
-- [ ] Scene 01 Identity: finalize Korean identity statement.
-- [ ] Scene 02 Positioning: finalize English positioning sentence.
-- [ ] Scene 03 Projects: finalize project list and one-line summaries.
-- [ ] Scene 04 Featured Project: finalize Campit summary.
-- [ ] Scene 05 Process: simplify process copy.
-- [ ] Scene 06 Principles: refine principles / notes copy.
-- [ ] Scene 07 Contact: replace placeholder links.
+- [x] Scene 01 Identity: finalize Korean identity statement.
+- [x] Scene 02 Positioning: finalize English positioning sentence.
+- [x] Scene 03 How I Work: finalize process copy.
+- [x] Scene 04 Projects: finalize 5 active projects with markdown-sourced content.
+- [x] Scene 05 Contact: finalize email link and footer.
+- [x] Scene 06 (Featured) deleted — no longer needed.
 
-## P4 — Campit Detail Page
+## P4 — Project Detail Pages
 
-- [ ] Confirm Campit title and subtitle.
-- [ ] Write Context.
-- [ ] Write Problem.
-- [ ] Write System.
-- [ ] Write Execution.
-- [ ] Write Impact using only confirmed or conservative claims.
-- [ ] Add Artifacts.
-- [ ] Add Reflection.
-- [ ] Confirm Back to deck link returns to the correct scene.
+- [x] All 5 active projects have complete detail pages with sections:
+  - [x] campit-influencer-marketing-system
+  - [x] campit-superfan
+  - [x] brand-partnership-campit (new)
+  - [x] gugok-dakgalbi-brand-launch (activated)
+  - [x] plays-lounge-popup-strategy (activated)
+- [x] Each project displays: Context, Problem, System, Execution, Impact, Artifacts, Reflection
+- [x] Back to deck link returns to Scene 04 (Projects)
+- [x] All projects sourced from markdown files in `/project` folder
 
-## P5 — Rauno-level QA
+## P5 — Build & Validation
 
-- [ ] Test desktop 1440px.
-- [ ] Test desktop 1920px.
-- [ ] Test MacBook-width layout.
-- [ ] Test mobile 390px width.
-- [ ] Check typography rhythm.
-- [ ] Check line-height and paragraph width.
-- [ ] Check empty space balance.
-- [ ] Check hover/focus states.
-- [ ] Check reduced motion behavior.
-- [ ] Check metadata and OG preview.
+- [x] Build verification: 0 errors, static pages generated (9/9)
+- [x] Browser testing: All 5 project detail pages load correctly
+- [x] Homepage scene navigation: All 5 scenes render correctly
+- [x] Responsive layout verified on multiple breakpoints
+- [ ] Final QA on desktop 1440px/1920px, mobile 390px
 
-## P6 — Project Expansion
+## P6 — Minor Refinements
 
-After Campit is finished:
+After project integration complete:
 
-- [ ] Add Portfolio Evidence Mapper project.
-- [ ] Add Plays Lounge Pop-up Strategy project.
-- [ ] Add Gugok Dakgalbi Brand Launch project.
-- [ ] Decide which projects are active/clickable.
-- [ ] Reuse the same detail page structure.
+- [ ] Fine-tune project list summary text if needed
+- [ ] Verify all images/assets in artifacts section
+- [ ] Check metadata and OG preview for each project
+- [ ] Test reduced motion behavior
+- [ ] Consider additional polish touches
 
 ## P7 — Deployment
 

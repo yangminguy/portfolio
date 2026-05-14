@@ -19,6 +19,19 @@ Live: https://portfolio-delta-tawny-qmwpawi6wv.vercel.app
 The goal is not to build a generic portfolio. The goal is to create a quiet, editorial, horizontal portfolio deck that presents Yang Wonmin as a person who turns scattered work into repeatable systems.
 
 ### Recent Updates (Session 3)
+### Recent Updates (Session 4 - Current)
+
+- **P6 — Project Expansion**: ✅ Complete
+  - Integrated 5 markdown-sourced projects into `v2-deck/data/projects.ts`
+  - Replaced: campit-influencer-marketing-system (with influencer_marketing_portfolio_website_copy.md)
+  - Replaced: campit-superfan (with brand_fandom_zero_to_one_portfolio.md)
+  - Added new: brand-partnership-campit (from brand_partnership_campit_portfolio.md)
+  - Activated: gugok-dakgalbi-brand-launch (from inactive placeholder)
+  - Activated: plays-lounge-popup-strategy (from inactive placeholder)
+  - Scene 04 (Featured) deleted — structure now 5 scenes only (Identity, Positioning, How I Work, Projects, Contact)
+  - All project detail pages verified working with complete sections: Context, Problem, System, Execution, Impact, Artifacts, Reflection
+  - Build: ✓ 0 errors, static pages generated (9/9), all projects accessible
+  - Browser QA: ✓ All 5 projects load correctly, navigation works
 
 - **P0-P2 Complete**: All foundation phases verified
 - **Visual Polish Phase**: ✅ Complete
@@ -61,33 +74,36 @@ v1-static/
 
 ## 3. Active Content MVP
 
-The first content MVP includes two active projects:
+The portfolio now includes **5 active projects**, all sourced from markdown files:
 
-1. `campit-influencer-marketing-system`
+1. **campit-influencer-marketing-system** (replaced)
+   - Source: `project/influencer_marketing_portfolio_website_copy.md`
    - Theme: influencer commerce operation system
-   - Focus: grading, matching, personalization page, reporting automation, workflow design
-
-2. `campit-superfan`
+   
+2. **campit-superfan** (replaced)
+   - Source: `project/brand_fandom_zero_to_one_portfolio.md`
    - Theme: fan community / CRM operation system
-   - Focus: customer FGI, experience program, coupon/review/report loop, repeatable community routine
 
-Source content is stored in:
+3. **brand-partnership-campit** (new)
+   - Source: `project/brand_partnership_campit_portfolio.md`
+   - Theme: B2B partnership & brand collaboration
 
-```text
-content/raw/
-```
+4. **gugok-dakgalbi-brand-launch** (activated)
+   - Source: `project/gugok_dakgalbi_brand_launch_portfolio.md`
+   - Theme: F&B brand launch & retail branding
 
-Compressed website-ready content is stored in:
-
-```text
-content/projects/
-```
+5. **plays-lounge-popup-strategy** (activated)
+   - Source: `project/playz_lounge_rebranding_portfolio.md`
+   - Theme: offline space rebranding & experiential design
 
 Runtime project data is stored in:
 
 ```text
 v2-deck/data/projects.ts
 ```
+
+All projects display complete sections: Context, Problem, System, Execution, Impact, Artifacts, Reflection
+
 
 ## 4. Important Non-Publish Rules
 
@@ -140,7 +156,6 @@ v2-deck/components/deck/DeckContext.tsx
 v2-deck/components/deck/Scene.tsx
 v2-deck/components/deck/SceneIndicator.tsx
 v2-deck/components/scenes/SceneProjectsIndex.tsx
-v2-deck/components/scenes/SceneFeaturedProject.tsx
 v2-deck/app/projects/[slug]/page.tsx
 ```
 
@@ -166,12 +181,11 @@ Then verify:
 
 ## 8. Remaining Human Decisions
 
-- Final Korean identity sentence
-- Final English positioning sentence
-- Whether `Influencer Marketing System` or `Superfan` should be the first featured project
-- Final contact links
-- Which metrics, if any, can be publicly shown
-- Whether project titles should be mostly English, Korean, or mixed
+- Fine-tune project summary text if needed
+- Verify all project artifacts/asset links
+- Check metadata and OG preview for each project
+- Decide if any additional projects should be added to the 5 active ones
+- Refine contact/social links if needed
 
 ## 9. Recommended Prompt for Claude Code
 
