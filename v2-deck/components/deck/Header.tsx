@@ -19,12 +19,6 @@ export function Header() {
         <button type="button" onClick={() => goTo(0)} className={linkCls}>
           Yang Wonmin
         </button>
-
-        <nav className="pointer-events-auto flex gap-5 sm:gap-7">
-          <button type="button" onClick={() => goTo(2)} className={linkCls}>Projects</button>
-          <button type="button" onClick={() => goTo(5)} className={linkCls}>Notes</button>
-          <button type="button" onClick={() => goTo(1)} className={linkCls}>About</button>
-        </nav>
       </div>
     </header>
   );

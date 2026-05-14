@@ -46,6 +46,7 @@ export function DeckProvider({ children }: { children: React.ReactNode }) {
   const [active, setActive] = useState(0);
   const [hasScrolled, setHasScrolled] = useState(false);
   const scrolledOnceRef = useRef(false);
+  const wheelLockRef = useRef(false);
 
   const goTo = useCallback((i: number) => {
     const clamped = Math.max(0, Math.min(TOTAL_SCENES - 1, i));
@@ -60,22 +61,29 @@ export function DeckProvider({ children }: { children: React.ReactNode }) {
   }, [active]);
 
   /* Convert ordinary vertical wheel intent into horizontal deck movement.
-   * This is what makes trackpads and mouse wheels feel natural while the deck
-   * still visually moves to the right, Rauno-style. */
+   * Lock mechanism ensures exactly one slide advances per wheel gesture.
+   */
   useEffect(() => {
     const root = document.getElementById("deck-root");
     if (!root) return;
 
     const onWheel = (e: WheelEvent) => {
-      const dominant = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-      if (dominant === 0) return;
       e.preventDefault();
-      root.scrollBy({ left: dominant, behavior: "auto" });
+      if (wheelLockRef.current) return;
+
+      const dominant = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      if (Math.abs(dominant) < 5) return;
+
+      wheelLockRef.current = true;
+      const next = dominant > 0 ? active + 1 : active - 1;
+      goTo(next);
+
+      setTimeout(() => { wheelLockRef.current = false; }, 800);
     };
 
     root.addEventListener("wheel", onWheel, { passive: false });
     return () => root.removeEventListener("wheel", onWheel);
-  }, []);
+  }, [active, goTo]);
 
   /* Keyboard navigation. Ignored when focus is in a form field. */
   useEffect(() => {

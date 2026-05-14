@@ -5,7 +5,7 @@ import { Scene } from "@/components/deck/Scene";
 import { PROCESS_STEPS } from "@/data/projects";
 
 /**
- * Scene 05 — How I Work
+ * Scene 03 — How I Work
  *
  * A text-based process diagram. Five words separated by arrows form one
  * horizontal row. Hovering or focusing a word crossfades its short
@@ -19,7 +19,7 @@ export function SceneProcess() {
   const [active, setActive] = useState(0);
 
   return (
-    <Scene index={4} ariaLabel="How I work">
+    <Scene index={2} ariaLabel="How I work">
       <div className="flex w-full flex-col justify-center">
         <div className="px-6 sm:px-12 max-w-scene w-full">
           <p

@@ -6,7 +6,7 @@ import { Scene } from "@/components/deck/Scene";
 import { projects } from "@/data/projects";
 
 /**
- * Scene 03 — Projects Index
+ * Scene 04 — Projects Index
  *
  * An agenda — not a list of cards. Four rows: `NN  Title  Year`.
  *
@@ -21,7 +21,7 @@ export function SceneProjectsIndex() {
   const current = projects[active];
 
   return (
-    <Scene index={2} ariaLabel="Projects">
+    <Scene index={3} ariaLabel="Projects">
       <div className="flex w-full flex-col justify-center">
         <div className="px-6 sm:px-12 max-w-[820px] w-full">
           <p
@@ -47,7 +47,7 @@ export function SceneProjectsIndex() {
                       isActiveHover ? "text-foreground" : "text-foreground/75",
                     ].join(" ")}
                   >
-                    <span>{p.title}</span>
+                    <span>{p.koreanTitle ?? p.title}</span>
                     {p.active && (
                       <span
                         aria-hidden

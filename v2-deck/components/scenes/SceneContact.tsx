@@ -1,14 +1,14 @@
 import { Scene } from "@/components/deck/Scene";
 
 /**
- * Scene 07 — Contact
+ * Scene 05 — Contact
  *
  * Closing slide. A large statement and an email link.
- * No "next" indicator — Scene 07 is the end.
+ * No "next" indicator — Scene 05 is the end.
  */
 export function SceneContact() {
   return (
-    <Scene index={6} ariaLabel="Contact">
+    <Scene index={4} ariaLabel="Contact">
       <div className="flex w-full flex-col">
         <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 max-w-prose">
           <h2
